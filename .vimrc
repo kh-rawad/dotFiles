@@ -2,6 +2,10 @@ call plug#begin('~/.vim/plugged')
 Plug 'mbbill/VimExplorer'
 cal plug#end()
 
+" FIX for WSL arrow keys not working
+" source https://wsl-guide.kennethreitz.org/_/downloads/en/latest/pdf/
+set term=builtin_ansi
+
 set nocompatible
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
