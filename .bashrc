@@ -15,9 +15,14 @@ powerline-daemon -q
 POWERLINE_BASH_CONTINUATION=1  
 POWERLINE_BASH_SELECT=1  
 fi  
+
 if [ -f /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh ]; then  
 source /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh  
 fi  
+
+if [ -f  /usr/share/powerline/bindings/bash/powerline.sh ]; then
+source  /usr/share/powerline/bindings/bash/powerline.sh
+fi
 ###################
 
 # history setup
