@@ -7,6 +7,7 @@ fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
+
 ###################
 ## powerline setup
 ###################
@@ -26,8 +27,10 @@ fi
 ###################
 
 # history setup
+export HISTCONTROL=ignoredups:ignorespace
 export HISTSIZE=100000
-export HISTFILEZISE=100000
+export HISTFILESIZE=100000
+shopt -s histappend
 
 # MyOptions
 shopt -s autocd
@@ -43,64 +46,18 @@ shopt -s histappend histreedit histverify
 shopt -s extglob       # Necessary for programmable completion.
 
 # User specific aliases and functions
+if [ -f "~/dotfiles/function.sh" ]; then
+source ~/dotfiles/functions.sh
+fi
 
-alias ls="ls --color"\
-	la="ls -a"\
-	ll="ls -l"\
-	lll="ls -la"
+# my functions
+if [ -f "~/dotfiles/alias.sh" ]; then
+source ~/dotfiles/alias.sh
+fi
 
-alias vis="sudo vi"
-alias ping="ping -c3"
-alias ctl="sudo systemctl"
-alias mkdir='mkdir -p'
-alias h='history'
-alias j='jobs -l'
-alias which='type -a'
-alias ..='cd ..'
-alias du='du -kh'    # Makes a more readable output.
-alias df='df -kTh'
-alias suod='sudo'
-
-#my functions
-
-
-function extract()      # Handy Extract Program
-{
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2)   tar xvjf $1     ;;
-            *.tar.gz)    tar xvzf $1     ;;
-            *.bz2)       bunzip2 $1      ;;
-            *.rar)       unrar x $1      ;;
-            *.gz)        gunzip $1       ;;
-            *.tar)       tar xvf $1      ;;
-            *.tbz2)      tar xvjf $1     ;;
-            *.tgz)       tar xvzf $1     ;;
-            *.zip)       unzip $1        ;;
-            *.Z)         uncompress $1   ;;
-            *.7z)        7z x $1         ;;
-            *)           echo "'$1' cannot be extracted via >extract<" ;;
-        esac
-    else
-        echo "'$1' is not a valid file!"
-    fi
-}
-#########################################################################
-#########################################################################
-#########################################################################
-export JFROG_HOME=/srv/containers/artifactoryServer/
-
-### Configure the ANDROID_HOME environment variable
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-
-#########################################################################
-############# riscv-gnu-toolchain #######################################
-export PATH=$PATH:/home/rawad/source/riscv-gnu-toolchain
-#########################################################################
-export PATH=$PATH:/home/rawad/bin
+# exports
+if [ -f "~/dotfiles/exports.sh" ]; then
+source ~/dotfiles/exports.sh
+fi
 
 neofetch
