@@ -1,17 +1,17 @@
 #!/bin/bash
 
-cp .bashrc ~/.bashrc
-cp -r .vim/ ~/.vim
-cp .vimrc ~/.vimrc
+cp -f .bashrc ~/.bashrc
+cp -f -r .vim/ ~/.vim
+cp -f .vimrc ~/.vimrc
 
-if [ ! -d dotfiles ]; then
+if [ ! -d ~/dotfiles ]; then
 echo "creating dotFiles folder"
 mkdir ~/dotfiles
 fi
 
-cp aliases ~/dotfiles
-cp exports ~/dotfiles
-cp functions ~/dotfiles
+cp -f aliases ~/dotfiles
+cp -f exports ~/dotfiles
+cp -f functions ~/dotfiles
 
 
 source ~/.bashrc
