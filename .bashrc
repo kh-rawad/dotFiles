@@ -46,7 +46,7 @@ shopt -s histappend histreedit histverify
 shopt -s extglob       # Necessary for programmable completion.
 
 # User specific aliases and functions
-if [ -f ~/dotfiles/function ]; then
+if [ -f ~/dotfiles/functions ]; then
 echo "Loading Functions"
 source ~/dotfiles/functions
 fi
@@ -58,7 +58,7 @@ source ~/dotfiles/aliases
 fi
 
 # exports
-if [ -f ~/dotfiles/exports.sh ]; then
+if [ -f ~/dotfiles/exports ]; then
 echo "Loading Exports"
 source ~/dotfiles/exports
 fi
