@@ -35,7 +35,7 @@ shopt -s histappend
 # MyOptions
 shopt -s autocd
 # Enable options:
-#shopt -s cdspell
+shopt -s cdspell
 #shopt -s cdable_vars
 #shopt -s checkhash
 #shopt -s checkwinsize
@@ -46,18 +46,21 @@ shopt -s histappend histreedit histverify
 shopt -s extglob       # Necessary for programmable completion.
 
 # User specific aliases and functions
-if [ -f "~/dotfiles/function.sh" ]; then
-source ~/dotfiles/functions.sh
+if [ -f ~/dotfiles/function ]; then
+echo "Loading Functions"
+source ~/dotfiles/functions
 fi
 
 # my functions
-if [ -f "~/dotfiles/alias.sh" ]; then
-source ~/dotfiles/alias.sh
+if [ -f ~/dotfiles/aliases ]; then
+echo "Loading Aliases"
+source ~/dotfiles/aliases
 fi
 
 # exports
-if [ -f "~/dotfiles/exports.sh" ]; then
-source ~/dotfiles/exports.sh
+if [ -f ~/dotfiles/exports.sh ]; then
+echo "Loading Exports"
+source ~/dotfiles/exports
 fi
 
 neofetch
