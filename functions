@@ -1,5 +1,3 @@
-#!/bin/bash
-
 function extract()      # Handy Extract Program
 {
     if [ -f $1 ] ; then

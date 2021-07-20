@@ -1,5 +1,3 @@
-#!/bin/bash
-
 export JFROG_HOME=/srv/containers/artifactoryServer/
 
 ### Configure the ANDROID_HOME environment variable

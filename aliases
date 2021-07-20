@@ -1,8 +1,6 @@
-#!/bin/bash
-
-alias ls="ls --color"\
-	la="ls -a"\
-	ll="ls -l"\
+alias ls="ls --color" \
+	la="ls -a" \
+	ll="ls -l" \
 	lll="ls -la"
 
 alias vis="sudo vi"
