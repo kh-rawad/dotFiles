@@ -47,19 +47,16 @@ shopt -s extglob       # Necessary for programmable completion.
 
 # User specific aliases and functions
 if [ -f ~/dotfiles/functions ]; then
-echo "Loading Functions"
 source ~/dotfiles/functions
 fi
 
 # my functions
 if [ -f ~/dotfiles/aliases ]; then
-echo "Loading Aliases"
 source ~/dotfiles/aliases
 fi
 
 # exports
 if [ -f ~/dotfiles/exports ]; then
-echo "Loading Exports"
 source ~/dotfiles/exports
 fi
 
