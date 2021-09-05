@@ -1,3 +1,13 @@
+# COLOURS! YAAAY!
+export TERM=xterm-256color
+
+# Obviously.
+export EDITOR=/usr/bin/vim
+
+# Personal binaries
+export PATH=${PATH}:~/bin:~/.local/bin:~/etc/scripts
+
+# Personal
 export JFROG_HOME=/srv/containers/artifactoryServer/
 
 ### Configure the ANDROID_HOME environment variable
@@ -11,4 +21,5 @@ export PATH=$PATH:$ANDROID_HOME/platform-tools
 ############# riscv-gnu-toolchain #######################################
 export PATH=$PATH:/home/rawad/source/riscv-gnu-toolchain
 #########################################################################
-export PATH=$PATH:/home/rawad/bin
+
+export ENVIRONMENT=development
