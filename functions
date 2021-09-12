@@ -19,3 +19,8 @@ function extract()      # Handy Extract Program
         echo "'$1' is not a valid file!"
     fi
 }
+
+# Open all modified files in vim tabs
+function vimod {
+    vim -p $(git status -suall | awk '{print $2}')
+}
