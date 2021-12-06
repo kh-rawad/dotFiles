@@ -37,9 +37,9 @@ fi
 # install dependencies
 cat <<EOT 
 # if arch linux
-# pacman -Syy & pacman -S vim neofetch powerline
+# pacman -Syy && pacman -S vim neofetch powerline
 # if debian 
-# apt update & apt upgrade & apt install vim neofetch powerline
+# apt update && sudo apt upgrade && sudo apt install vim neofetch powerline
 
 # Restart your session OR source .bashrc
 EOT
