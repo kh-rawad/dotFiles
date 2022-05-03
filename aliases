@@ -1,7 +1,9 @@
 alias ls="ls --color" \
-	la="ls -a" \
+	la="ls -A" \
 	ll="ls -l" \
-	lll="ls -la"
+	lll="ls -la" \
+	#alias l='ls -CF'
+
 
 alias vis="sudo vi"
 alias ping="ping -c3"
