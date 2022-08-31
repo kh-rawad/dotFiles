@@ -1,6 +1,14 @@
 call plug#begin('~/.vim/plugged')
 Plug 'mbbill/VimExplorer'
+Plug 'tpope/vim-fugitive'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dense-analysis/ale'
+Plug 'morhetz/gruvbox'
 cal plug#end()
+autocmd VimEnter * VE .
+
+set background=dark
+colorscheme gruvbox
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FIX for WSL arrow keys not working
@@ -72,7 +80,6 @@ nnoremap <C-L> :nohl<CR><C-L>
 
 " Visualize tabs and newlines
 set listchars=tab:▸\ ,eol:¬,nbsp:~,trail:·
-
 " Uncomment this to enable by default:
 "set list " To enable by default
 " Or use your leader key + l to toggle on/off
@@ -89,7 +96,7 @@ set showmatch
 map <leader><space> :let @/=''<cr> " clear search
 
 "------------------------------------------------------------
-"------------------------------------------------------------
+
 " Color scheme (terminal)
 set t_Co=256
 "set background=dark
