@@ -5,6 +5,7 @@ cp -f .bashrc ~/.bashrc
 echo "Installing VIM Config"
 cp -f -r .vim/ ~/.vim
 cp -f .vimrc ~/.vimrc
+vim +'PlugInstall --sync' +qall &> /dev/null
 
 if [ -d ~/dotfiles ]; then echo "DotFiles folder exsists continue"; fi
 if [ ! -d ~/dotfiles ]; then echo "creating dotFiles folder"; mkdir ~/dotfiles; fi
