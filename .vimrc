@@ -118,6 +118,7 @@ let g:VEConf_showHiddenFiles = 0
 " TABS Config
 set showtabline=2
 nnoremap <silent> <C-t>     :tab new<CR>
+nnoremap <silent> <C-x>     :tabclose<CR>
 nnoremap <silent> <Leader>tt   :tabs<CR>
 nnoremap <silent> <Leader>tn   :tabn<CR>
 nnoremap <silent> <Leader>>    :tabn<CR>
