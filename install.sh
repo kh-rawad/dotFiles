@@ -2,6 +2,8 @@
 
 echo "Installing BashRC"
 cp -f .bashrc ~/.bashrc
+echo "Installing ZshRC"
+cp -f .zshrc ~/.zshrc
 echo "Installing VIM Config"
 cp -f -r .vim/ ~/.vim
 cp -f .vimrc ~/.vimrc
