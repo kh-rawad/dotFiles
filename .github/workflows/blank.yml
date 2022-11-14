@@ -1,3 +1,4 @@
+---
 name: CI
 
 on:
@@ -22,5 +23,5 @@ jobs:
           ./install.sh
       - name: Run source bashrc
         run: |
-          echo restarting bash 
+          echo restarting bash
           source ~/.bashrc
