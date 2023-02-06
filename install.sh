@@ -21,7 +21,7 @@ cp -f functions ~/dotfiles
 
 echo "Installing .Profile";
 if [ ! -f ~/.profile ]; then echo "Creating [~/.profile] "; touch ~/.profile; fi
-grep -q \DOTFILES ~/.profile
+grep -q DOTFILES ~/.profile
 if [ $? -eq 1 ]; then
     echo "Updating .profile"
     cat <<EOT >> ~/.profile

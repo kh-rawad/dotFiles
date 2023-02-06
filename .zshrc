@@ -1,8 +1,8 @@
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
-PATH="$HOME/Library/Python/2.7/bin:$PATH"
+PATH="$HOME/Library/Python/3.9/bin:$PATH"
 
-. /Users/rawadkharma/Library/Python/2.7/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
+. $HOME/Library/Python/3.9/lib/python/site-packages/powerline/bindings/zsh/powerline.zsh
 
 
 export NVM_DIR="$HOME/.nvm"
