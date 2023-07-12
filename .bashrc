@@ -140,4 +140,10 @@ if [ -f ~/dotfiles/exports ]; then
 source ~/dotfiles/exports
 fi
 
+# user local PATH
+export PATH=~/.local/bin/:$PATH
+
 neofetch
+
+# Check if screen running attach else create new screen
+if [ -z "$STY" ]; then screen -xRR; fi
