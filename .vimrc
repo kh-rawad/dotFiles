@@ -140,3 +140,6 @@ nnoremap <C-s>     :w<CR>
 "noremap <silent> <C-s>     <Esc>:w<CR>i
 
 
+"------------------------------------------------------------
+" abrevations
+:iabbrev _bash #!/bin/bash
