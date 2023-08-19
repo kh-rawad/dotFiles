@@ -1,12 +1,12 @@
 #!/bin/bash
 
 echo "Installing BashRC"
-cp -f .bashrc ~/.bashrc
+cp -f bashrc ~/.bashrc
 echo "Installing ZshRC"
-cp -f .zshrc ~/.zshrc
+cp -f zshrc ~/.zshrc
 echo "Installing VIM Config"
-cp -f -r .vim/ ~/.vim
-cp -f .vimrc ~/.vimrc
+cp -f -r vim/ ~/.vim
+cp -f vimrc ~/.vimrc
 vim +'PlugInstall --sync' +qall &> /dev/null
 
 if [ -d ~/dotfiles ]; then echo "DotFiles folder exsists continue"; fi
