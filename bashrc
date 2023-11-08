@@ -27,9 +27,14 @@ if [ -f /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline
 source /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh  
 fi  
 
-if [ -f  /usr/share/powerline/bindings/bash/powerline.sh ]; then
+if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
 source  /usr/share/powerline/bindings/bash/powerline.sh
 fi
+
+if [ -f ~/.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh ]; then
+source ~/.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh
+fi
+
 ###################
 
 # history setup
