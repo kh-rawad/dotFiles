@@ -151,8 +151,3 @@ export PATH=~/.local/bin/:$PATH
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-ps --no-headers u -p $PPID | awk -F'\t' '{print $NF}' | grep -q "SCREEN" || neofetch
-
-# Check if screen running attach else create new screen
-if [ -z "$STY" ]; then screen -xRRq; fi

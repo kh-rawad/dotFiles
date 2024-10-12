@@ -2,13 +2,12 @@ scriptencoding utf-8
 set encoding=utf-8
 
 call plug#begin('~/.vim/plugged')
-Plug 'mbbill/VimExplorer'
+Plug 'preservim/nerdtree'
 Plug 'tpope/vim-fugitive'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 Plug 'morhetz/gruvbox'
 cal plug#end()
-autocmd VimEnter * VE .
 
 set background=dark
 colorscheme gruvbox
@@ -88,6 +87,10 @@ set listchars=tab:▸\ ,eol:¬,nbsp:~,trail:·
 " Or use your leader key + l to toggle on/off
 map <leader>l :set list!<CR> " Toggle tabs and EOL
 
+" NERDTree
+map <F2> :NERDTreeToggle<cr>
+
+
 " Searching
 nnoremap / /\v
 vnoremap / /\v
@@ -127,20 +130,38 @@ let g:VEConf_showHiddenFiles = 0
 "
 " TABS Config
 set showtabline=2
-nnoremap <silent> <C-t>     :tab new<CR>
-nnoremap <silent> <C-x>     :tabclose<CR>
-nnoremap <silent> <Leader>tt   :tabs<CR>
-nnoremap <silent> <Leader>tn   :tabn<CR>
-nnoremap <silent> <Leader>>    :tabn<CR>
-nnoremap <silent> <Leader>tp   :tabp<CR>
-nnoremap <silent> <Leader><    :tabp<CR>
+" nnoremap <silent> <C-t>     :tab new<CR>
+" nnoremap <silent> <C-x>     :tabclose<CR>
+" nnoremap <silent> <Leader>tt   :tabs<CR>
+" nnoremap <silent> <Leader>tn   :tabn<CR>
+" nnoremap <silent> <Leader>>    :tabn<CR>
+" nnoremap <silent> <Leader>tp   :tabp<CR>
+" nnoremap <silent> <Leader><    :tabp<CR>
+" navigation like firefox
+nnoremap <C-S-tab> :tabprevious<CR>
+nnoremap <C-tab>   :tabnext<CR>
+nnoremap <C-t>     :tabnew<CR>
+inoremap <C-S-tab> <Esc>:tabprevious<CR>i
+inoremap <C-tab>   <Esc>:tabnext<CR>i
+inoremap <C-t>     <Esc>:tabnew<CR>
+inoremap <C-S-w>   <Esc>:tabclose<CR>
+nnoremap <A-F1> 1gt
+nnoremap <A-F2> 2gt
+nnoremap <A-F3> 3gt
+nnoremap <A-F4> 4gt
+nnoremap <A-F5> 5gt
+nnoremap <A-F6> 6gt
+nnoremap <A-F7> 7gt
+nnoremap <A-F8> 8gt
+nnoremap <A-F9> 9gt
+nnoremap <A-F10> 10gt 
 "------------------------------------------------------------
 " my mappings
 " save read only files
 cnoremap w!! w !sudo tee % >/dev/null
 " CTRL-S AS save
 nnoremap <C-s>     :w<CR>
-"noremap <silent> <C-s>     <Esc>:w<CR>i
+inoremap <silent> <C-s>     <Esc>:w<CR>i
 
 
 "------------------------------------------------------------
