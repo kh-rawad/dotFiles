@@ -10,30 +10,30 @@ esac
 if [ -f /etc/bash.bashrc ]; then
     . /etc/bash.bashrc
 fi
-
+DOTFILES_FOLDER=~/.config/dotfiles
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-###################
-## powerline setup
-###################
-if [ -f `command -v powerline-daemon` ]; then  
-powerline-daemon -q  
-POWERLINE_BASH_CONTINUATION=1  
-POWERLINE_BASH_SELECT=1  
-fi  
+# ###################
+# ## powerline setup
+# ###################
+# if [ -f `command -v powerline-daemon` ]; then  
+# powerline-daemon -q  
+# POWERLINE_BASH_CONTINUATION=1  
+# POWERLINE_BASH_SELECT=1  
+# fi  
 
-if [ -f /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh ]; then  
-source /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh  
-fi  
+# if [ -f /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh ]; then  
+# source /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh  
+# fi  
 
-if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
-source  /usr/share/powerline/bindings/bash/powerline.sh
-fi
+# if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
+# source  /usr/share/powerline/bindings/bash/powerline.sh
+# fi
 
-if [ -f ~/.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh ]; then
-source ~/.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh
-fi
+# if [ -f ~/.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh ]; then
+# source ~/.local/lib/python3.9/site-packages/powerline/bindings/bash/powerline.sh
+# fi
 
 ###################
 
@@ -131,23 +131,37 @@ fi
 
 
 # User specific aliases and functions
-if [ -f ~/dotfiles/functions ]; then
-source ~/dotfiles/functions
+if [ -f $DOTFILES_FOLDER/functions ]; then
+source $DOTFILES_FOLDER/functions
 fi
 
 # my functions
-if [ -f ~/dotfiles/aliases ]; then
-source ~/dotfiles/aliases
+if [ -f $DOTFILES_FOLDER/aliases ]; then
+source $DOTFILES_FOLDER/aliases
 fi
 
 # exports
-if [ -f ~/dotfiles/exports ]; then
-source ~/dotfiles/exports
+if [ -f $DOTFILES_FOLDER/exports ]; then
+source $DOTFILES_FOLDER/exports
 fi
 
-# user local PATH
-export PATH=~/.local/bin/:$PATH
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Setup fzf
+# ---------
+if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
+fi
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# eval "$(fzf --zsh)"
+
+# kubernetes completion
+if command -v kubectl >/dev/null 2>&1; then
+  source <(kubectl completion bash)
+  source <(kubeadm completion bash)
+  alias k=kubectl
+  complete -o default -F __start_kubectl k
+fi
+
+if command -v helm >/dev/null 2>&1; then
+  source <(helm completion bash)
+fi

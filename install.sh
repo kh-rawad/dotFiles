@@ -4,7 +4,8 @@ DOTFILES_FOLDER=~/.config/dotfiles
 [[ -d $DOTFILES_FOLDER ]] && echo "DotFiles folder exsists continue" || mkdir -p $DOTFILES_FOLDER
 
 # install dependencies
-sudo apt update -y && sudo apt upgrade -y && sudo apt install -y vim exa duf curl wget git zsh tmux
+sudo apt update -y && sudo apt upgrade -y && sudo apt install -y vim exa duf curl wget git zsh tmux fonts-powerline 
+[[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
 
 ## installs nvm (Node Version Manager)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
@@ -17,7 +18,7 @@ echo "NodeJS Version:" `node -v`
 echo "NPM Version:" `npm -v`
 
 ## install oh-my-zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 ## install zsh-autosuggestions
 # git clone 
 
@@ -28,16 +29,34 @@ cp -f tmux.conf ~/.tmux.conf
 ~/.tmux/plugins/tpm/bin/install_plugins
 
 ## add k9s binary from GitHub
+echo "Installing K9s"
 curl -sL https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb -o k9s.deb
 sudo dpkg -i k9s.deb
 rm -f k9s.deb
 
 ## install vim-plug
+echo "Installing Vim-Plug"
+[[ ! -d ~/.vim/autoload ]] && mkdir -p ~/.vim/autoload
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 echo "Installing VIM Config"
 cp -f vimrc ~/.vimrc
 vim +'PlugInstall --sync' +qall &> /dev/null
+
+## install fzf
+echo "Installing FZF"
+[[ ! -d ~/.fzf ]] && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --no-key-bindings --no-completion --no-update-rc
+
+
+
+## install yh (Yaml Highlighter)
+echo "Installing YH"
+curl -sL https://github.com/andreazorzetto/yh/releases/download/v0.4.0/yh-linux-amd64.zip -o yh.zip
+unzip yh.zip
+chmod +x yh
+sudo mv yh /usr/local/bin
+rm -f yh.zip
 
 ################################################################################################################
 # install dotfiles

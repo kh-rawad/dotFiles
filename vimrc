@@ -1,12 +1,16 @@
 scriptencoding utf-8
 set encoding=utf-8
 
+let g:coc_node_path = trim(system('which node'))
+
 call plug#begin('~/.vim/plugged')
 Plug 'preservim/nerdtree'
 Plug 'tpope/vim-fugitive'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 Plug 'morhetz/gruvbox'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 cal plug#end()
 
 set background=dark
@@ -79,6 +83,10 @@ let mapleader = "?"
 map Y y$
 " Map <C-L> (redraw screen) to also turn off search highlighting until the next search
 nnoremap <C-L> :nohl<CR><C-L>
+
+" disable modifyOtherKeys
+let &t_TI = ""
+let &t_TE = ""
 
 " Visualize tabs and newlines
 set listchars=tab:▸\ ,eol:¬,nbsp:~,trail:·
