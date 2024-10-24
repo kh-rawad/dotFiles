@@ -46,7 +46,7 @@ vim +'PlugInstall --sync' +qall &> /dev/null
 ## install fzf
 echo "Installing FZF"
 [[ ! -d ~/.fzf ]] && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --no-key-bindings --no-completion --no-update-rc
+~/.fzf/install --key-bindings --no-completion --no-update-rc
 
 
 

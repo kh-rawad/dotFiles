@@ -138,17 +138,19 @@ let g:VEConf_showHiddenFiles = 0
 "
 " TABS Config
 set showtabline=2
-" nnoremap <silent> <C-t>     :tab new<CR>
-" nnoremap <silent> <C-x>     :tabclose<CR>
-" nnoremap <silent> <Leader>tt   :tabs<CR>
-" nnoremap <silent> <Leader>tn   :tabn<CR>
-" nnoremap <silent> <Leader>>    :tabn<CR>
-" nnoremap <silent> <Leader>tp   :tabp<CR>
-" nnoremap <silent> <Leader><    :tabp<CR>
+nnoremap <silent> <C-k>        :<Esc>:q!<CR>
+nnoremap <silent> <C-n>        :tabnew<CR>
+nnoremap <silent> <Leader>tq   :tabclose<CR>
+nnoremap <silent> <Leader>tt   :tabs<CR>
+nnoremap <silent> <Leader>tn   :tabnext<CR>
+nnoremap <silent> <Leader>>    :tabnext<CR>
+nnoremap <silent> <Leader>tp   :tabprevious<CR>
+nnoremap <silent> <Leader><    :tabprevious<CR>
+
 " navigation like firefox
-nnoremap <C-S-tab> :tabprevious<CR>
-nnoremap <C-tab>   :tabnext<CR>
-nnoremap <C-t>     :tabnew<CR>
+nnoremap <C-S-tab>      :tabprevious<CR>
+nnoremap <C-tab>        :tabnext<CR>
+nnoremap <C-S-t>        :tabnew<CR>
 inoremap <C-S-tab> <Esc>:tabprevious<CR>i
 inoremap <C-tab>   <Esc>:tabnext<CR>i
 inoremap <C-t>     <Esc>:tabnew<CR>
@@ -170,8 +172,6 @@ cnoremap w!! w !sudo tee % >/dev/null
 " CTRL-S AS save
 nnoremap <C-s>     :w<CR>
 inoremap <silent> <C-s>     <Esc>:w<CR>i
-
-
 "------------------------------------------------------------
 " abrevations
 :iabbrev _bash #!/bin/bash
