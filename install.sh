@@ -1,11 +1,18 @@
 #!/bin/bash
 
 DOTFILES_FOLDER=~/.config/dotfiles
+DEFAULT_SHELL='zsh'
 [[ -d $DOTFILES_FOLDER ]] && echo "DotFiles folder exsists continue" || mkdir -p $DOTFILES_FOLDER
 
 # install dependencies
-sudo apt update -y && sudo apt upgrade -y && sudo apt install -y vim exa duf curl wget git zsh tmux fonts-powerline 
-[[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
+echo "Installing Dependencies"
+if [[ $OSTYPE == 'darwin'* ]]; then
+    brew install vim duf curl wget git tmux
+    [[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
+elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
+    sudo apt update -y && sudo apt upgrade -y && sudo apt install -y vim exa duf curl wget git zsh tmux fonts-powerline 
+    [[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
+fi
 
 ## installs nvm (Node Version Manager)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
@@ -20,7 +27,7 @@ echo "NPM Version:" `npm -v`
 ## install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 ## install zsh-autosuggestions
-# git clone 
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 ## install tmux plugins manager
 echo "Installing Tmux Config"
