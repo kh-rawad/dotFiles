@@ -3,9 +3,8 @@ export LC_ALL=en_US.UTF-8
 
 SHELL=$(ps -ocomm= -q $$) 
 
-export PATH=~/.local/bin/:$PATH
 # Personal binaries
-export PATH=${PATH}:~/bin:~/.local/bin:~/etc/scripts
+export PATH=~/bin:~/.local/bin:~/etc/scripts:${PATH}
 export TERM=xterm-256color
 export EDITOR=/usr/bin/vim
 export ENVIRONMENT=development

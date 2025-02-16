@@ -2,6 +2,30 @@
 
 DOTFILES_FOLDER=~/.config/dotfiles
 DEFAULT_SHELL='zsh'
+
+# Get OS and architecture
+get_os() {
+    case "$OSTYPE" in
+        darwin*)  echo "macos" ;;
+        linux*)   echo "linux" ;;
+        msys*|cygwin*|mingw*) echo "windows" ;;
+        *)        echo "unknown" ;;
+    esac
+}
+
+get_arch() {
+    local arch=$(uname -m)
+    case "$arch" in
+        x86_64|amd64) echo "amd64" ;;
+        i386|i686)    echo "i386" ;;
+        arm64|aarch64) echo "arm64" ;;
+        *)           echo "unknown" ;;
+    esac
+}
+
+SYSTEM_INFO="$(get_os)-$(get_arch)"
+echo "Detected system: $SYSTEM_INFO"
+
 [[ -d $DOTFILES_FOLDER ]] && echo "DotFiles folder exsists continue" || mkdir -p $DOTFILES_FOLDER
 
 # install dependencies
@@ -37,9 +61,13 @@ cp -f tmux.conf ~/.tmux.conf
 
 ## add k9s binary from GitHub
 echo "Installing K9s"
-curl -sL https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb -o k9s.deb
-sudo dpkg -i k9s.deb
-rm -f k9s.deb
+if [[ $OSTYPE == 'darwin'* ]]; then
+    brew install derailed/k9s/k9s
+elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
+    curl -sL https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb -o k9s.deb
+    sudo dpkg -i k9s.deb
+    rm -f k9s.deb
+fi
 
 ## install vim-plug
 echo "Installing Vim-Plug"
@@ -68,9 +96,9 @@ rm -f yh.zip
 ################################################################################################################
 # install dotfiles
 echo "Installing BashRC"
-cp -f bashrc ~/.bashrc
+cp -f SHELLS/BASH/bashrc ~/.bashrc
 echo "Installing ZshRC"
-cp -f zshrc ~/.zshrc
+cp -f SHELLS/ZSH/zshrc ~/.zshrc
 echo "Installing Aliases"
 cp -f aliases $DOTFILES_FOLDER
 echo "Installing Exports"

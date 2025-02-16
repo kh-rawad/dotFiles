@@ -76,7 +76,6 @@ plugins=(
   dotenv
   macos
   debian
-  tmux
   kubectl
   helm
   cpanm

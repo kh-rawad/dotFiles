@@ -1,2 +1,3 @@
 iabbrev _bash #!/bin/bash
-
+iabbrev _perl #!/usr/bin/perl
+iabbrev _python #!/usr/bin/python
