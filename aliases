@@ -20,3 +20,6 @@ alias du='du -kh'    # Makes a more readable output.
 alias df='df -kTh'
 alias suod='sudo'    # personal issue
 alias fuk='sudo $(history -p !!)'
+
+# Alias to create a tmux session with the current folder name if it does not exist
+alias tn='tmux new-session -A -s $(basename "$PWD")'
