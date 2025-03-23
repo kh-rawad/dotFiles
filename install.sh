@@ -93,6 +93,9 @@ chmod +x yh
 sudo mv yh /usr/local/bin
 rm -f yh.zip
 
+## set Default shell
+chsh -s $(which zsh)
+
 ################################################################################################################
 # install dotfiles
 echo "Installing BashRC"
