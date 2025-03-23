@@ -48,6 +48,22 @@ nvm install 18
 echo "NodeJS Version:" `node -v`
 echo "NPM Version:" `npm -v`
 
+## install Fonts
+echo "Installing Fonts"
+if [[ $OSTYPE == 'darwin'* ]]; then
+    brew tap homebrew/cask-fonts
+    brew install --cask font-hack-nerd-font
+elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
+    sudo apt install -y fonts-hack-nerd
+fi
+# Download and install FiraCode Nerd Font
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts
+curl -fLo "FiraCode.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+unzip FiraCode.zip -d FiraCode
+fc-cache -fv
+cd -
+
 ## install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 ## install zsh-autosuggestions
