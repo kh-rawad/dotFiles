@@ -34,7 +34,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     brew install vim duf curl wget git tmux
     [[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
 elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
-    sudo apt update -y && sudo apt upgrade -y && sudo apt install -y vim exa duf curl wget git zsh tmux fonts-powerline 
+    sudo apt update -y && sudo apt install -y vim exa duf curl wget git zsh tmux fonts-powerline 
     [[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
 fi
 
