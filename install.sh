@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Source custom functions
+source "$(dirname "$0")/functions"
+
 DOTFILES_FOLDER=~/.config/dotfiles
 DEFAULT_SHELL='zsh'
 
@@ -54,15 +57,11 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     brew tap homebrew/cask-fonts
     brew install --cask font-hack-nerd-font
 elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
-    sudo apt install -y fonts-hack-nerd
+    # sudo apt install -y fonts-hack-nerd
+    # Download and install FiraCode Nerd Font
+    install_font_zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
 fi
-# Download and install FiraCode Nerd Font
-mkdir -p ~/.local/share/fonts
-cd ~/.local/share/fonts
-curl -fLo "FiraCode.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
-unzip FiraCode.zip -d FiraCode
-fc-cache -fv
-cd -
+
 
 ## install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -79,17 +78,21 @@ cp -f tmux.conf ~/.tmux.conf
 echo "Installing K9s"
 if [[ $OSTYPE == 'darwin'* ]]; then
     brew install derailed/k9s/k9s
-elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
-    curl -sL https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_linux_amd64.deb -o k9s.deb
-    sudo dpkg -i k9s.deb
-    rm -f k9s.deb
+else
+    manual_install \
+        https://github.com/derailed/k9s/releases/download/v0.50.6/k9s_$(get_os)_$(get_arch).tar.gz \
+        k9s\
+        /usr/local/bin \
+        executable
 fi
 
 ## install vim-plug
 echo "Installing Vim-Plug"
-[[ ! -d ~/.vim/autoload ]] && mkdir -p ~/.vim/autoload
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+manual_install \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
+    plug.vim \
+    ~/.vim/autoload
+
 echo "Installing VIM Config"
 cp -f vimrc ~/.vimrc
 vim +'PlugInstall --sync' +qall &> /dev/null
@@ -99,17 +102,16 @@ echo "Installing FZF"
 [[ ! -d ~/.fzf ]] && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install --key-bindings --no-completion --no-update-rc
 
-
-
 ## install yh (Yaml Highlighter)
-echo "Installing YH"
-curl -sL https://github.com/andreazorzetto/yh/releases/download/v0.4.0/yh-linux-amd64.zip -o yh.zip
-unzip yh.zip
-chmod +x yh
-sudo mv yh /usr/local/bin
-rm -f yh.zip
+manual_install \
+    https://github.com/andreazorzetto/yh/releases/download/v0.4.0/yh-linux-amd64.zip \
+    yh \
+    /usr/local/bin \
+    executable
+
 
 ## set Default shell
+echo "set default shell"
 chsh -s $(which zsh)
 
 ################################################################################################################

@@ -70,3 +70,84 @@ function treee(){
     topFolders=$(ls -aF -1 | grep "/" | wc -l);
     test $topFolders -ne 0 || echo "   --> no subfolders";
 }
+
+function install_font_zip(){
+    # Usage:
+    # install_font_zip "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip"
+
+    # Check if the URL is provided
+    if [ -z "$1" ]; then
+    echo "Please provide a URL to a font zip file."
+    exit 1
+    fi
+
+    # Create a temporary directory
+    TEMP_DIR=$(mktemp -d)
+
+    # Download the font zip file
+    wget -O "$TEMP_DIR/font.zip" "$1"
+
+    # Unzip the font file
+    unzip "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
+
+    # Move the font files to the system fonts directory
+    sudo mv "$TEMP_DIR"/*.{ttf,otf} /usr/local/share/fonts/
+
+    # Update the font cache
+    fc-cache -f -v
+
+    # Clean up
+    rm -rf "$TEMP_DIR"
+
+    echo "Fonts installed successfully!"
+}
+
+function manual_install() {
+    # Usage: manual_install <url> <binary_name> <destination_dir>
+    local url="$1"
+    local bin_name="$2"
+    local dest_dir="$3"
+    local executable="$4"
+
+    echo "Installing $bin_name from $url to $dest_dir"
+    if [[ -z "$url" || -z "$bin_name" || -z "$dest_dir" ]]; then
+        echo "Usage: manual_install <url> <binary_name> <destination_dir>"
+        return 1
+    fi
+    if [[ ! -d $dest_dir ]]; then
+        mkdir -p "$dest_dir" || { echo "Failed to create directory $dest_dir"; return 1; }
+    fi
+
+    echo "Downloading $bin_name from $url"
+    TMPDIR=$(mktemp -d)
+    cd "$TMPDIR" || { echo "Failed to change directory to $TMPDIR"; return 1; }
+    trap 'rm -rf "$TMPDIR"' EXIT  # Ensure cleanup on exit
+
+    curl -sL "$url" -o downloaded_archive || { echo "Download failed!"; return 1; }
+
+    if [[ "$url" == *.zip ]]; then
+        unzip -o downloaded_archive || { echo "Unzip failed!"; return 1; }
+        rm -rf downloaded_archive
+    elif [[ "$url" == *.tar.gz ]] || [[ "$url" == *.tgz ]]; then
+        tar -xzf downloaded_archive || { echo "tar extraction failed!"; return 1; }
+        rm -rf downloaded_archive
+    else
+        echo "not archive type."
+        mv downloaded_archive "$bin_name" || { echo "rename failed!"; return 1; }
+        echo "copying file to $dest_dir"
+    fi
+
+    if [[ "$bin_name" == "*" ]]; then
+        if [[ "$executable" == "exec" || "$executable" == "executable" ]]; then
+            chmod +x ./*
+        fi
+        sudo mv ./* "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+    else
+        if [[ "$executable" == "exec" || "$executable" == "executable" ]]; then
+            chmod +x "$bin_name" || { echo "chmod failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+        fi
+        sudo mv "$bin_name" "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+    fi
+    echo "$bin_name installed to $dest_dir"
+    cd -
+}
