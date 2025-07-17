@@ -1,7 +1,7 @@
 scriptencoding utf-8
 set encoding=utf-8
 
-let g:coc_node_path = trim(system('which node'))
+let g:coc_node_path = substitute(system('which node'), '\n', '', 'g')
 
 call plug#begin('~/.vim/plugged')
 Plug 'preservim/nerdtree'
@@ -9,7 +9,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 Plug 'morhetz/gruvbox'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': 'fzf#install()' }
 Plug 'junegunn/fzf.vim'
 cal plug#end()
 
