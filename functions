@@ -117,6 +117,7 @@ function install_font_zip(){
     unzip "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
 
     # Move the font files to the system fonts directory
+    [[ -d $HOME/.local/share/fonts ]] || mkdir -p $HOME/.local/share/fonts
     mv "$TEMP_DIR"/*.{ttf,otf} $HOME/.local/share/fonts/
 
     # Update the font cache
