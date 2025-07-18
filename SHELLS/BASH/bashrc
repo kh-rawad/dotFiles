@@ -130,8 +130,7 @@ fi
 if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
   PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
 fi
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-# eval "$(fzf --zsh)"
+eval "$(fzf --bash)"
 
 # kubernetes completion
 if command -v kubectl >/dev/null 2>&1; then

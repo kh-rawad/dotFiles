@@ -189,20 +189,31 @@ function run_install_script() {
     local url="$1"
     local dest="$2"
     local run_cmd="$3"
+    if [[ $# -gt 3 ]]; then
+        shift 3
+        run_cmd="$run_cmd $*"
+    fi
     echo "-----------------------------------------------------------------------"
     echo "Installing from $url to $dest"
-    
+    [[ -z "$url" || -z "$dest" ]] && { echo "Usage: run_install_script <url> <destination> [run_cmd]"; return 1; }
+    if [[ -d "$dest" ]]; then
+        echo "Directory $dest already exists. Cleanup..."
+        rm -rf "$dest"
+    fi
     git clone --depth 1 "$url" "$dest" || { echo "Failed to clone repository $url"; return 1; }
-    if [[ -d "$dest" && -f "$dest/install.sh" ]]; then
+    if [[ -d "$dest" ]]; then
         cd "$dest" || { echo "Failed to change directory to $dest"; return 1; }
         if [[ -n "$run_cmd" ]]; then
-            echo "Running command: $run_cmd" >&2
-            eval "$run_cmd" || { echo "Failed to run command: $run_cmd"; return 1; }
+            echo "Running command: $run_cmd"
+            $run_cmd || { echo "Failed to run command: $run_cmd"; return 1; }
         else
             echo "Running default install script: ./install.sh"
             ./install.sh || { echo "Failed to run install.sh"; return 1; }
         fi
         cd - || { echo "Failed to return to previous directory"; return 1; }
+    else
+        echo "Destination directory $dest does not exist after cloning."
+        return 1
     fi
     echo "$dest Installation completed successfully."
 }

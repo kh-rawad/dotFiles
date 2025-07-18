@@ -11,6 +11,17 @@ fi
 
 # Create the dotfiles folder if it doesn't exist
 [[ -d $DOTFILES_FOLDER ]] && echo "DotFiles folder exists continue" || mkdir -p $DOTFILES_FOLDER
+# install dotfiles
+echo "Installing BashRC"
+cp -f SHELLS/BASH/bashrc $HOME/.bashrc
+echo "Installing ZshRC"
+cp -f SHELLS/ZSH/zshrc $HOME/.zshrc
+echo "Installing Aliases"
+cp -f aliases $DOTFILES_FOLDER
+echo "Installing Exports"
+cp -f exports $DOTFILES_FOLDER
+echo "Installing Functions"
+cp -f functions $DOTFILES_FOLDER
 
 # install dependencies
 if [[ -z $PACKAGING_START ]]; then
@@ -96,8 +107,7 @@ else
     run_install_script \
         https://github.com/junegunn/fzf.git \
         $HOME/.fzf \
-        install --key-bindings --no-completion --no-update-rc
-
+        ./install --key-bindings --completion --no-update-rc --xdg
 fi
 
 ## install yh (Yaml Highlighter)
@@ -113,17 +123,6 @@ manual_install \
 #chsh -s $(which zsh)
 
 ################################################################################################################
-# install dotfiles
-echo "Installing BashRC"
-cp -f SHELLS/BASH/bashrc $HOME/.bashrc
-echo "Installing ZshRC"
-cp -f SHELLS/ZSH/zshrc $HOME/.zshrc
-echo "Installing Aliases"
-cp -f aliases $DOTFILES_FOLDER
-echo "Installing Exports"
-cp -f exports $DOTFILES_FOLDER
-echo "Installing Functions"
-cp -f functions $DOTFILES_FOLDER
 
 # echo "Installing .Profile";
 # [[ ! -f $HOME/.profile ]] && touch $HOME/.profile

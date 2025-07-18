@@ -123,8 +123,8 @@ if [[ ! "$PATH" == *$FZF_BASE* ]]; then
 fi
 ## key bindings
 FZF_ALT_C_COMMAND='find . -maxdepth 1'
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-#eval "$(fzf --zsh)"
+
+eval "$(fzf --zsh)"
 
 
 
