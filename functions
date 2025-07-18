@@ -1,5 +1,11 @@
-function extract()      # Handy Extract Program
-{
+# Handy Extract Program
+function extract() {
+    # Usage: extract <file>
+    if [ -z "$1" ] ; then
+        echo "Usage: extract <file>"
+        echo "Extracts the specified archive file."
+        return 1
+    fi
     if [ -f $1 ] ; then
         case $1 in
             *.tar.bz2)   tar xvjf $1     ;;
@@ -71,6 +77,26 @@ function treee(){
     test $topFolders -ne 0 || echo "   --> no subfolders";
 }
 
+# Get OS and architecture
+get_os() {
+    case "$OSTYPE" in
+        darwin*)  echo "macos" ;;
+        linux*)   echo "linux" ;;
+        msys*|cygwin*|mingw*) echo "windows" ;;
+        *)        echo "unknown" ;;
+    esac
+}
+
+get_arch() {
+    local arch=$(uname -m)
+    case "$arch" in
+        x86_64|amd64) echo "amd64" ;;
+        i386|i686)    echo "i386" ;;
+        arm64|aarch64) echo "arm64" ;;
+        *)           echo "unknown" ;;
+    esac
+}
+
 function install_font_zip(){
     # Usage:
     # install_font_zip "https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip"
@@ -91,7 +117,7 @@ function install_font_zip(){
     unzip "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
 
     # Move the font files to the system fonts directory
-    sudo mv "$TEMP_DIR"/*.{ttf,otf} /usr/local/share/fonts/
+    mv "$TEMP_DIR"/*.{ttf,otf} $HOME/.local/share/fonts/
 
     # Update the font cache
     fc-cache -f -v
@@ -109,6 +135,7 @@ function manual_install() {
     local dest_dir="$3"
     local executable="$4"
 
+    echo "-----------------------------------------------------------------------"
     echo "Installing $bin_name from $url to $dest_dir"
     if [[ -z "$url" || -z "$bin_name" || -z "$dest_dir" ]]; then
         echo "Usage: manual_install <url> <binary_name> <destination_dir>"
@@ -141,13 +168,40 @@ function manual_install() {
         if [[ "$executable" == "exec" || "$executable" == "executable" ]]; then
             chmod +x ./*
         fi
-        sudo mv ./* "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+        mv ./* "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
     else
         if [[ "$executable" == "exec" || "$executable" == "executable" ]]; then
             chmod +x "$bin_name" || { echo "chmod failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
         fi
-        sudo mv "$bin_name" "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+        ls
+        mv "$bin_name" "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
     fi
     echo "$bin_name installed to $dest_dir"
     cd -
+}
+
+function run_install_script() {
+    # Usage: run_install_script <url> <destination> [run_cmd]
+    # This function clones a repository and runs its install script.
+    # default run_cmd is "./install.sh"
+
+    local url="$1"
+    local dest="$2"
+    local run_cmd="$3"
+    echo "-----------------------------------------------------------------------"
+    echo "Installing from $url to $dest"
+    
+    git clone --depth 1 "$url" "$dest" || { echo "Failed to clone repository $url"; return 1; }
+    if [[ -d "$dest" && -f "$dest/install.sh" ]]; then
+        cd "$dest" || { echo "Failed to change directory to $dest"; return 1; }
+        if [[ -n "$run_cmd" ]]; then
+            echo "Running command: $run_cmd" >&2
+            eval "$run_cmd" || { echo "Failed to run command: $run_cmd"; return 1; }
+        else
+            echo "Running default install script: ./install.sh"
+            ./install.sh || { echo "Failed to run install.sh"; return 1; }
+        fi
+        cd - || { echo "Failed to return to previous directory"; return 1; }
+    fi
+    echo "$dest Installation completed successfully."
 }
