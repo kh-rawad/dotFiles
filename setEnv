@@ -1,8 +1,14 @@
 #!/bin/sh
 # Source custom functions
 
-source "$(dirname "$0")/functions"
+# Find the project root directory (where functions file is located)
+SCRIPT_DIR="$(dirname "$0")"
+PROJECT_ROOT="$SCRIPT_DIR"
+while [[ ! -f "$PROJECT_ROOT/utils/utils.sh" && "$PROJECT_ROOT" != "/" ]]; do
+    PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+done
 
+source "$PROJECT_ROOT/utils/utils.sh"
 export DOTFILES_FOLDER="$HOME/.config/dotfiles"
 export DEFAULT_SHELL='zsh'
 

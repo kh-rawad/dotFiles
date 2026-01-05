@@ -1,0 +1,35 @@
+# K9s Kubernetes CLI Installation Task
+# 
+# K9s provides a terminal UI to interact with your Kubernetes clusters.
+# It offers a fast way to review and resolve day to day issues in Kubernetes.
+#
+# Usage:
+#   task install:k9s
+#
+# Requirements:
+#   - macOS: Homebrew
+#   - Linux: curl, tar (usually pre-installed)
+#
+# Official documentation: https://k9scli.io/
+
+version: '3'
+
+tasks:
+  k9s:install:
+    desc: Install K9s Kubernetes terminal UI
+    cmds:
+      - chmod +x k9s/k9s.sh
+      - ./k9s/k9s.sh
+    silent: false
+
+  k9s:check:
+    desc: Check if K9s is installed and show version
+    cmds:
+      - k9s version 2>/dev/null || echo "K9s not found. Run 'task APPS:k9s:install' to install."
+    silent: true
+
+  k9s:update:
+    desc: Update K9s to latest version (reinstall)
+    cmds:
+      - task k9s:install
+    silent: false

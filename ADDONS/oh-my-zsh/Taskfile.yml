@@ -1,0 +1,79 @@
+# Oh My Zsh Installation Task
+#
+# Oh My Zsh is a framework for managing your Zsh configuration.
+# It provides themes, plugins, and helpful functions for an enhanced
+# command-line experience.
+#
+# Usage:
+#   task oh-my-zsh:install
+#
+# Requirements:
+#   - Zsh shell
+#   - curl, git (usually pre-installed)
+#
+# Official website: https://ohmyz.sh/
+
+version: '3'
+
+tasks:
+  oh-my-zsh:install:
+    desc: Install Oh My Zsh framework and useful plugins
+    cmds:
+      - chmod +x oh-my-zsh/oh-my-zsh.sh
+      - ./oh-my-zsh/oh-my-zsh.sh
+    silent: true
+
+  oh-my-zsh:check:
+    desc: Check Oh My Zsh installation and show status
+    cmds:
+      - |
+        if [ -d "{{.HOME}}/.oh-my-zsh" ]; then
+          echo "Oh My Zsh is installed at: {{.HOME}}/.oh-my-zsh"
+          echo "Current theme: $(grep 'ZSH_THEME=' {{.HOME}}/.zshrc 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo 'Unable to detect')"
+          echo ""
+          echo "Installed plugins:"
+          if [ -d "{{.HOME}}/.oh-my-zsh/custom/plugins" ]; then
+            ls "{{.HOME}}/.oh-my-zsh/custom/plugins" 2>/dev/null || echo "No custom plugins"
+          fi
+          echo ""
+          echo "Active plugins in .zshrc:"
+          sed -n '/^plugins=(/,/^)/p' "{{.HOME}}/.zshrc" 2>/dev/null | grep -v '^#' || echo "Unable to read .zshrc"
+        else
+          echo "Oh My Zsh not found. Run 'task oh-my-zsh:install' to install."
+        fi
+    silent: true
+
+  oh-my-zsh:update:
+    desc: Update Oh My Zsh and plugins
+    cmds:
+      - |
+        if [ -d "{{.HOME}}/.oh-my-zsh" ]; then
+          echo "Updating Oh My Zsh..."
+          cd "{{.HOME}}/.oh-my-zsh"
+          git pull origin master
+          echo "Updating zsh-autosuggestions plugin..."
+          if [ -d "{{.HOME}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
+            cd "{{.HOME}}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+            git pull origin master
+          fi
+        else
+          echo "Oh My Zsh not installed. Run 'task oh-my-zsh:install' first."
+        fi
+    silent: true
+
+  oh-my-zsh:themes:
+    desc: List available Oh My Zsh themes
+    cmds:
+      - |
+        if [ -d "{{.HOME}}/.oh-my-zsh/themes" ]; then
+          echo "Available Oh My Zsh themes:"
+          ls "{{.HOME}}/.oh-my-zsh/themes" | head -20
+          echo "..."
+          echo "Total themes: $(ls {{.HOME}}/.oh-my-zsh/themes | wc -l)"
+          echo ""
+          echo "To change theme, edit ZSH_THEME in ~/.zshrc"
+          echo "Current theme: $(grep 'ZSH_THEME=' {{.HOME}}/.zshrc 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo 'default')"
+        else
+          echo "Oh My Zsh not installed. Run 'task oh-my-zsh:install' first."
+        fi
+    silent: true

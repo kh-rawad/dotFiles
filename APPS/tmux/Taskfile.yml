@@ -1,0 +1,101 @@
+# Tmux and TPM Installation Task
+#
+# Tmux is a terminal multiplexer that allows multiple terminal sessions
+# within a single window. TPM (Tmux Plugin Manager) makes it easy to
+# install and manage tmux plugins.
+#
+# Usage:
+#   task tmux:install
+#
+# Requirements:
+#   - git (usually pre-installed)
+#   - tmux (will be installed via package manager if needed)
+#
+# Official websites: 
+#   - https://github.com/tmux/tmux
+#   - https://github.com/tmux-plugins/tpm
+
+version: '3'
+
+tasks:
+  tmux:install:
+    desc: Install Tmux configuration and Plugin Manager (TPM)
+    cmds:
+      - chmod +x tmux/tmux.sh
+      - ./tmux/tmux.sh
+    silent: true
+
+  tmux:check:
+    desc: Check Tmux and TPM installation status
+    cmds:
+      - |
+        echo "Checking Tmux installation..."
+        if command -v tmux >/dev/null 2>&1; then
+          echo "Tmux version: $(tmux -V)"
+          echo "Tmux config: $([ -f {{.HOME}}/.tmux.conf ] && echo 'Installed' || echo 'Not found')"
+          echo ""
+          echo "TPM status:"
+          if [ -d "{{.HOME}}/.tmux/plugins/tpm" ]; then
+            echo "TPM installed at: {{.HOME}}/.tmux/plugins/tpm"
+            echo "Installed plugins:"
+            ls "{{.HOME}}/.tmux/plugins" 2>/dev/null | grep -v tpm || echo "No plugins installed"
+          else
+            echo "TPM not found. Run 'task tmux:install' to install."
+          fi
+        else
+          echo "Tmux not installed. Install tmux first:"
+          echo "  - macOS: brew install tmux"
+          echo "  - Ubuntu/Debian: sudo apt install tmux"
+        fi
+    silent: true
+
+  tmux:update:
+    desc: Update TPM and reload tmux plugins
+    cmds:
+      - |
+        if [ -d "{{.HOME}}/.tmux/plugins/tpm" ]; then
+          echo "Updating TPM..."
+          cd "{{.HOME}}/.tmux/plugins/tpm"
+          git pull origin master
+          echo "Updating plugins..."
+          "{{.HOME}}/.tmux/plugins/tpm/bin/update_plugins" all
+        else
+          echo "TPM not installed. Run 'task tmux:install' first."
+        fi
+    silent: true
+
+  tmux:sessions:
+    desc: List active tmux sessions
+    cmds:
+      - |
+        if command -v tmux >/dev/null 2>&1; then
+          echo "Active tmux sessions:"
+          tmux list-sessions 2>/dev/null || echo "No active sessions"
+        else
+          echo "Tmux not installed."
+        fi
+    silent: true
+
+  tmux:keys:
+    desc: Show custom tmux keybindings reference
+    cmds:
+      - |
+        echo "Custom Tmux Keybindings (Prefix: Ctrl+Space):"
+        echo ""
+        echo "Window Management:"
+        echo "  Prefix + c          - Create new window"
+        echo "  Prefix + \"          - Split horizontally"  
+        echo "  Prefix + %          - Split vertically"
+        echo ""
+        echo "Pane Navigation:"
+        echo "  Prefix + h/j/k/l    - Navigate panes (vim-style)"
+        echo "  Alt + Arrow         - Navigate panes (no prefix)"
+        echo ""
+        echo "Window Navigation:"
+        echo "  Shift + Arrow       - Switch windows"
+        echo "  Alt + H/L           - Switch windows (vim-style)"
+        echo ""
+        echo "Plugin Management:"
+        echo "  Prefix + I          - Install new plugins"
+        echo "  Prefix + U          - Update plugins"
+    silent: true

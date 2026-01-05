@@ -1,84 +1,5 @@
-# Handy Extract Program
-function extract() {
-    # Usage: extract <file>
-    if [ -z "$1" ] ; then
-        echo "Usage: extract <file>"
-        echo "Extracts the specified archive file."
-        return 1
-    fi
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2)   tar xvjf $1     ;;
-            *.tar.gz)    tar xvzf $1     ;;
-            *.bz2)       bunzip2 $1      ;;
-            *.rar)       unrar x $1      ;;
-            *.gz)        gunzip $1       ;;
-            *.tar)       tar xvf $1      ;;
-            *.tbz2)      tar xvjf $1     ;;
-            *.tgz)       tar xvzf $1     ;;
-            *.zip)       unzip $1        ;;
-            *.Z)         uncompress $1   ;;
-            *.7z)        7z x $1         ;;
-            *)           echo "'$1' cannot be extracted via >extract<" ;;
-        esac
-    else
-        echo "'$1' is not a valid file!"
-    fi
-}
-
-# Open all modified files in vim tabs
-function vimod {
-    vim -p $(git status -suall | awk '{print $2}')
-}
-
-# view MarkDown files in terminal
-function readmd() { 
-    pandoc "$1" | lynx --stdin 
-}
-
-function treee(){
-    #####################################################
-    # Unix/Linux Folder Tree v2.9                       #
-    #                                                   #
-    # Displays structure of folder hierarchy            #
-    # ------------------------------------------------- #
-    # This tiny script uses "ls", "grep", and "sed"     #
-    # in a single command to show the nesting of        #
-    # subfolders.                                       #
-    #                                                   #
-    # Setup:                                            #
-    #    $ mkdir -p ~/apps/tree                         #
-    #    Save "tree.sh" into the "~/apps/tree" folder   #
-    #    $ cd ~/apps/tree                               #
-    #    $ chmod +x tree.sh                             #
-    #    $ ln -s tree.sh /usr/local/bin/tree            #
-    #    $ which tree                                   #
-    #                                                   #
-    # Usage:                                            #
-    #    $ tree [FOLDER]                                #
-    #                                                   #
-    # Examples:                                         #
-    #    $ tree                                         #
-    #    $ tree /usr/local/etc                          #
-    #    $ tree ..                                      #
-    #                                                   #
-    # WTFPL ~ https://centerkey.com/tree ~ Dem Pilafian #
-    #####################################################
-
-    test -n "$1" && cd "$1";  #if parameter exists, use as base folder
-    pwd;
-    ls -R | grep "^[.]/" | sed -e "s/:$//" -e "s/[^\/]*\//--/g" -e "s/^/   |/";
-    # Transformations:
-    #     grep    --> select folders (filter out files)
-    #     1st sed --> remove trailing colon
-    #     2nd sed --> replace higher level folder names with dashes
-    #     3rd sed --> indent graph and add leading vertical bar
-    topFolders=$(ls -aF -1 | grep "/" | wc -l);
-    test $topFolders -ne 0 || echo "   --> no subfolders";
-}
-
 # Get OS and architecture
-get_os() {
+function get_os() {
     case "$OSTYPE" in
         darwin*)  echo "macos" ;;
         linux*)   echo "linux" ;;
@@ -87,7 +8,7 @@ get_os() {
     esac
 }
 
-get_arch() {
+function get_arch() {
     local arch=$(uname -m)
     case "$arch" in
         x86_64|amd64) echo "amd64" ;;
@@ -174,7 +95,6 @@ function manual_install() {
         if [[ "$executable" == "exec" || "$executable" == "executable" ]]; then
             chmod +x "$bin_name" || { echo "chmod failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
         fi
-        ls
         mv "$bin_name" "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
     fi
     echo "$bin_name installed to $dest_dir"

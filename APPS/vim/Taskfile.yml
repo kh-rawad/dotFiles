@@ -1,0 +1,91 @@
+# Vim and vim-plug Installation Task
+#
+# Vim is a highly configurable text editor. vim-plug is a minimalist
+# vim plugin manager that makes it easy to install and manage vim plugins.
+#
+# Usage:
+#   task vim:install
+#
+# Requirements:
+#   - vim (will be installed via package manager if needed)
+#   - curl (usually pre-installed)
+#
+# Official websites:
+#   - https://www.vim.org/
+#   - https://github.com/junegunn/vim-plug
+
+version: '3'
+
+tasks:
+  vim:install:
+    desc: Install Vim configuration and vim-plug plugin manager
+    cmds:
+      - chmod +x vim/vim.sh
+      - ./vim/vim.sh
+    silent: true
+
+  vim:check:
+    desc: Check Vim and vim-plug installation status
+    cmds:
+      - |
+        echo "Checking Vim installation..."
+        if command -v vim >/dev/null 2>&1; then
+          echo "Vim version: $(vim --version | head -1)"
+          echo "Vim config: $([ -f {{.HOME}}/.vimrc ] && echo 'Installed' || echo 'Not found')"
+          echo ""
+          echo "vim-plug status:"
+          if [ -f "{{.HOME}}/.vim/autoload/plug.vim" ]; then
+            echo "vim-plug installed at: {{.HOME}}/.vim/autoload/plug.vim"
+            echo "Installed plugins:"
+            if [ -d "{{.HOME}}/.vim/plugged" ]; then
+              ls "{{.HOME}}/.vim/plugged" 2>/dev/null | head -10 || echo "No plugins installed"
+              echo "$(ls {{.HOME}}/.vim/plugged 2>/dev/null | wc -l) total plugins installed"
+            else
+              echo "No plugins directory found"
+            fi
+          else
+            echo "vim-plug not found. Run 'task vim:install' to install."
+          fi
+        else
+          echo "Vim not installed. Install vim first:"
+          echo "  - macOS: brew install vim"
+          echo "  - Ubuntu/Debian: sudo apt install vim"
+        fi
+    silent: true
+
+  vim:update:
+    desc: Update vim-plug and all vim plugins
+    cmds:
+      - task vim:install
+    silent: true
+
+  vim:clean:
+    desc: Remove unused vim plugins
+    cmds:
+      - |
+        if [ -f "{{.HOME}}/.vim/autoload/plug.vim" ]; then
+          echo "Cleaning unused vim plugins..."
+          vim +'PlugClean!' +qall
+          echo "Unused plugins removed."
+        else
+          echo "vim-plug not installed. Run 'task vim:install' first."
+        fi
+    silent: true
+
+  vim:config:
+    desc: Show vim configuration summary
+    cmds:
+      - |
+        if [ -f "{{.HOME}}/.vimrc" ]; then
+          echo "Vim configuration summary:"
+          echo "Config file: {{.HOME}}/.vimrc"
+          echo ""
+          echo "Enabled features:"
+          grep -E "^(set|colorscheme|syntax)" "{{.HOME}}/.vimrc" | head -10
+          echo ""
+          echo "Installed plugins:"
+          grep -E "^Plug" "{{.HOME}}/.vimrc" | wc -l | xargs echo "Total plugins configured:"
+        else
+          echo "Vim config not found. Run 'task vim:install' to install."
+        fi
+    silent: true

@@ -23,3 +23,7 @@ alias fuk='sudo $(history -p !!)'
 
 # Alias to create a tmux session with the current folder name if it does not exist
 alias tn='tmux new-session -A -s $(basename "$PWD")'
+
+# go-task aliases
+alias t="task"
+alias tl="task --list-all"

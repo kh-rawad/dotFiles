@@ -1,0 +1,32 @@
+version: '3'
+includes:
+  k9s:
+    taskfile: ./k9s/Taskfile.yml
+    internal: false
+    flatten: true
+  yh:
+    taskfile: ./yh/Taskfile.yml
+    internal: false
+    flatten: true
+  nvm:
+    taskfile: ./nvm/Taskfile.yml
+    internal: false
+    flatten: true
+  fzf:
+    taskfile: ./fzf/Taskfile.yml
+    internal: false
+    flatten: true
+  tmux:
+    taskfile: ./tmux/Taskfile.yml
+    internal: false
+    flatten: true
+  vim:
+    taskfile: ./vim/Taskfile.yml
+    internal: false
+    flatten: true
+
+tasks:
+  default:
+    cmds:
+      - task --list --dir .
+    silent: true

@@ -1,0 +1,63 @@
+# YH (YAML Highlighter) Installation Task
+#
+# YH is a command-line tool that provides syntax highlighting for YAML files.
+# It makes YAML files easier to read in the terminal with colorized output.
+#
+# Usage:
+#   task install:yh
+#
+# Requirements:
+#   - macOS: Homebrew (optional, fallback to direct download)
+#   - Linux: curl, unzip (usually pre-installed)
+#
+# Official repository: https://github.com/andreazorzetto/yh
+
+version: '3'
+
+tasks:
+  yh:install:
+    desc: Install YH (YAML Highlighter) for syntax highlighting
+    cmds:
+      - chmod +x yh/yh.sh
+      - ./yh/yh.sh
+    silent: false
+
+  yh:check:
+    desc: Check if YH is installed and show version
+    cmds:
+      - yh version 2>/dev/null || echo "YH not found. Run 'task install:yh' to install."
+    silent: true
+
+  yh:update:
+    desc: Update YH to latest version (reinstall)
+    cmds:
+      - task yh:install
+    silent: false
+
+  yh:demo:
+    desc: Demo YH with a sample YAML file
+    cmds:
+      - |
+        if command -v yh >/dev/null 2>&1; then
+          echo "Creating sample YAML..."
+          cat > /tmp/sample.yaml << EOF
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          name: example-pod
+          labels:
+            app: demo
+        spec:
+          containers:
+          - name: nginx
+            image: nginx:1.21
+            ports:
+            - containerPort: 80
+        EOF
+          echo "Highlighting sample YAML with yh:"
+          yh /tmp/sample.yaml
+          rm /tmp/sample.yaml
+        else
+          echo "YH not installed. Run 'task install:yh' first."
+        fi
+    silent: false

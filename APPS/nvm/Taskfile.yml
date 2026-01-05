@@ -1,0 +1,67 @@
+# NVM (Node Version Manager) Installation Task
+#
+# NVM allows you to install and manage multiple Node.js versions.
+# It's essential for Node.js development when you need to switch between projects
+# that require different Node.js versions.
+#
+# Usage:
+#   task install:nvm
+#
+# Requirements:
+#   - curl (usually pre-installed)
+#   - bash/zsh shell
+#
+# Official documentation: https://github.com/nvm-sh/nvm
+
+version: '3'
+
+env:
+  NVM_DIR: "{{.HOME}}/.nvm"
+
+tasks:
+  nvm:install:
+    desc: Install NVM (Node Version Manager) and Node.js LTS
+    cmds:
+      - chmod +x nvm/nvm.sh
+      - ./nvm/nvm.sh
+    silent: true
+
+  nvm:check:
+    desc: Check if NVM is installed and show available Node versions
+    cmds:
+      - |
+        if [ -f "{{.HOME}}/.nvm/nvm.sh" ]; then
+          echo "NVM is installed at: {{.HOME}}/.nvm"
+          echo "To use NVM, run: source {{.HOME}}/.nvm/nvm.sh"
+          if [ -f "{{.HOME}}/.nvm/alias/default" ]; then
+            echo "Default Node version: $(cat {{.HOME}}/.nvm/alias/default)"
+          else
+            echo "No default Node version set"
+          fi
+          echo "Installed Node versions:"
+          ls "{{.HOME}}/.nvm/versions/node" 2>/dev/null || echo "No Node versions installed"
+        else
+          echo "NVM not found. Run 'task nvm:install' to install."
+        fi
+    silent: true
+
+  nvm:help:
+    desc: Install a specific Node.js version via NVM
+    cmds:
+      - |
+        echo "    To install a Node.js version:    "
+        echo "1. First source NVM: source {{.HOME}}/.nvm/nvm.sh"
+        echo "2. Then run: nvm install <version>"
+        echo ""
+        echo "Available versions:"
+        echo "  - 18 (LTS Hydrogen)"
+        echo "  - 20 (LTS Iron)"  
+        echo "  - 22 (Current)"
+        echo "  - lts/* (Latest LTS)"
+        echo "----------------------------------"
+        echo "    Switch to a different Node.js version    "
+        echo "To switch Node.js version:"
+        echo "1. First source NVM: source {{.HOME}}/.nvm/nvm.sh"
+        echo "2. List versions: nvm list"
+        echo "3. Switch version: nvm use <version>"
+    silent: true

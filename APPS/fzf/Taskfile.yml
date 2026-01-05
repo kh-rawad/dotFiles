@@ -1,0 +1,68 @@
+# FZF (Fuzzy Finder) Installation Task
+#
+# FZF is a general-purpose command-line fuzzy finder that can be used with
+# any list; files, command history, processes, hostnames, bookmarks, etc.
+#
+# Usage:
+#   task fzf:install
+#
+# Requirements:
+#   - macOS: Homebrew
+#   - Linux: git (usually pre-installed)
+#
+# Official repository: https://github.com/junegunn/fzf
+
+version: '3'
+
+tasks:
+  fzf:install:
+    desc: Install FZF command-line fuzzy finder
+    cmds:
+      - chmod +x fzf/fzf.sh
+      - ./fzf/fzf.sh
+    silent: true
+
+  fzf:check:
+    desc: Check FZF installation and show version
+    cmds:
+      - |
+        if command -v fzf >/dev/null 2>&1; then
+          echo "FZF is installed"
+          echo "Version: $(fzf --version)"
+          echo "Location: $(which fzf)"
+          echo ""
+          echo "Key bindings status:"
+          if [ -f "{{.HOME}}/.fzf.zsh" ] || [ -f "{{.HOME}}/.fzf.bash" ]; then
+            echo "  ✓ Shell integration files found"
+          else
+            echo "  ✗ Shell integration files not found"
+          fi
+          echo ""
+          echo "Available key bindings:"
+          echo "  Ctrl+R - Search command history"
+          echo "  Ctrl+T - Search files and directories"
+          echo "  Alt+C  - Change directory (cd)"
+        else
+          echo "FZF not found. Run 'task fzf:install' to install."
+        fi
+    silent: true
+
+  fzf:update:
+    desc: Update FZF to latest version (reinstall)
+    cmds:
+      - task: fzf:install
+    silent: true
+
+  fzf:demo:
+    desc: Demo FZF functionality with examples
+    cmds:
+      - |
+        if command -v fzf >/dev/null 2>&1; then
+          echo "FZF Demo - Searching current directory files:"
+          echo "Running: find . -type f | head -20 | fzf --preview 'head -10 {}'"
+          echo ""
+          find . -type f | head -20 | fzf --preview 'head -10 {}'
+        else
+          echo "FZF not installed. Run 'task fzf:install' first."
+        fi
+    silent: true

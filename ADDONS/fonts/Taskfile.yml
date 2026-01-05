@@ -1,0 +1,72 @@
+# Nerd Fonts Installation Task
+#
+# Nerd Fonts provide enhanced glyphs and icons for terminal applications.
+# They are patched fonts that include additional glyphs from popular 
+# icon fonts like Font Awesome, Devicons, Octicons, and others.
+#
+# Usage:
+#   task install:fonts
+#
+# Requirements:
+#   - macOS: Homebrew
+#   - Linux: curl, unzip (usually pre-installed)
+#
+# Official website: https://www.nerdfonts.com/
+
+version: '3'
+
+tasks:
+  fonts:install:
+    desc: Install Nerd Fonts for enhanced terminal experience
+    cmds:
+      - chmod +x fonts/fonts.sh
+      - ./fonts/fonts.sh
+    silent: true
+
+  fonts:check:
+    desc: Check installed fonts and provide configuration guidance
+    cmds:
+      - |
+        echo "Checking for Nerd Fonts installation..."
+        if [ "{{OS}}" = "darwin" ]; then
+          if ls ~/Library/Fonts/*Nerd* >/dev/null 2>&1 || ls /Library/Fonts/*Nerd* >/dev/null 2>&1; then
+            echo "Nerd Fonts found in system"
+            echo "Available fonts in ~/Library/Fonts:"
+            ls ~/Library/Fonts/*Nerd* 2>/dev/null || echo "None in user fonts"
+            echo "Available fonts in /Library/Fonts:"
+            ls /Library/Fonts/*Nerd* 2>/dev/null || echo "None in system fonts"
+          else
+            echo "No Nerd Fonts found. Run 'task install:fonts' to install."
+          fi
+        else
+          if ls ~/.local/share/fonts/*Nerd* >/dev/null 2>&1 >/dev/null 2>&1; then
+            echo "Nerd Fonts found in ~/.local/share/fonts:"
+            ls ~/.local/share/fonts/*Nerd* 2>/dev/null
+          elif ls ~/.fonts/*Nerd* >/dev/null 2>&1; then
+            echo "Nerd Fonts found in ~/.fonts:"
+            ls ~/.fonts/*Nerd* 2>/dev/null
+          else
+            echo "No Nerd Fonts found. Run 'task install:fonts' to install."
+          fi
+        fi
+        echo ""
+        echo "To use Nerd Fonts:"
+        echo "1. Restart your terminal application"
+        echo "2. Go to terminal preferences/settings"
+        echo "3. Change font to a Nerd Font (e.g., 'Hack Nerd Font', 'FiraCode Nerd Font')"
+    silent: true
+
+  fonts:list:
+    desc: List available Nerd Font downloads
+    cmds:
+      - |
+        echo "Popular Nerd Fonts available for download:"
+        echo "  - FiraCode Nerd Font (Linux default)"
+        echo "  - Hack Nerd Font (macOS default)" 
+        echo "  - JetBrains Mono Nerd Font"
+        echo "  - Source Code Pro Nerd Font"
+        echo "  - Inconsolata Nerd Font"
+        echo "  - Ubuntu Mono Nerd Font"
+        echo ""
+        echo "Visit https://www.nerdfonts.com/font-downloads for more options"
+    silent: true

@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+includes:
+  APPS:
+    dir: '{{.USER_WORKING_DIR}}'
+    taskfile: "~/.config/dotfiles/APPS/Taskfile.yml"
+    internal: false
+  ADDONS:
+    dir: '{{.USER_WORKING_DIR}}'
+    taskfile: "~/.config/dotfiles/ADDONS/Taskfile.yml"  
+    internal: false
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  install:
+    desc: Run the main dotfiles installation script for upgrade or fresh install
+    cmds:
+      - cd $DOTFILES_FOLDER
+      - ./install.sh
+    silent: false
