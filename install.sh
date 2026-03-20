@@ -117,10 +117,19 @@ manual_install \
     "$HOME/.local/bin" \
     executable
 
+## install copilot vim plugin
+if [[ $OSTYPE == 'darwin' ]]; then
+    brew install --cask github-copilot
+else
+    manual_install \
+        https://github.com/github/copilot.vim.git \
+        ~/.vim/pack/github/start/copilot.vim \
+        echo "Open Vim and run :Copilot setup to complete installation"
+fi
 
 ## set Default shell
 #echo "set default shell"
-#chsh -s $(which zsh)
+chsh -s $(which zsh)
 
 ################################################################################################################
 
