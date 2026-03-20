@@ -1,7 +1,16 @@
 scriptencoding utf-8
 set encoding=utf-8
 
-let g:coc_node_path = substitute(system('which node'), '\n', '', 'g')
+if empty(&shell) || fnamemodify(&shell, ':t') ==# '-bash'
+  let &shell = exepath('bash')
+endif
+if empty(&shell)
+  let &shell = exepath('sh')
+endif
+
+let g:coc_node_path = exists('*exepath')
+      \ ? exepath('node')
+      \ : substitute(system('which node'), '\n', '', 'g')
 
 call plug#begin('~/.vim/plugged')
 Plug 'preservim/nerdtree'
@@ -11,7 +20,13 @@ Plug 'dense-analysis/ale'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf', { 'do': 'fzf#install()' }
 Plug 'junegunn/fzf.vim'
-cal plug#end()
+Plug '~/VimSession_plug'
+call plug#end()
+
+let g:vimsession_directory = '~/.vim_sessions'
+let g:vimsession_auto_load = 1
+let g:vimsession_auto_save = 1
+let g:vimsession_create_on_start = 1
 
 set background=dark
 "colorscheme gruvbox
@@ -97,6 +112,11 @@ map <leader>l :set list!<CR> " Toggle tabs and EOL
 
 " NERDTree
 map <F2> :NERDTreeToggle<cr>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | call feedkeys(":quit\<CR>:\<BS>") | endif
 
 
 " Searching
