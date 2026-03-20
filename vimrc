@@ -177,3 +177,128 @@ inoremap <silent> <C-s>     <Esc>:w<CR>i
 "------------------------------------------------------------
 " abrevations
 :iabbrev _bash #!/bin/bash
+
+
+""------------------------------------------------------------""
+let g:last_terminal_popup = get(g:, 'last_terminal_popup', 0)
+
+function! s:GetTerminalPopupId() abort
+  if type(get(g:, 'last_terminal_popup', 0)) != v:t_number
+    let g:last_terminal_popup = 0
+  endif
+
+  let l:popup_id = g:last_terminal_popup
+  if l:popup_id <= 0 || empty(popup_getpos(l:popup_id))
+    let g:last_terminal_popup = 0
+    echohl WarningMsg
+    echomsg 'No active terminal popup'
+    echohl None
+    return 0
+  endif
+
+  return l:popup_id
+endfunction
+
+function! OpenTerminalPopup(...) abort
+  let l:cmd = a:0 >= 1 ? a:1 : &shell
+  let l:title = a:0 >= 2 ? a:2 : ' Terminal '
+  let l:cmd_name = type(l:cmd) == v:t_list ? get(l:cmd, 0, '') : get(split(l:cmd), 0, '')
+
+  if empty(l:cmd_name)
+    echohl WarningMsg
+    echomsg 'Popup command is empty'
+    echohl None
+    return -1
+  endif
+
+  if l:cmd_name !=# &shell && executable(l:cmd_name) == 0 && empty(exepath(l:cmd_name))
+    echohl WarningMsg
+    echomsg 'Command not found: ' . l:cmd_name
+    echohl None
+    return -1
+  endif
+
+  let l:buf = term_start(l:cmd, {
+        \ 'hidden': 1,
+        \ 'cwd': getcwd(),
+        \ 'term_finish': 'close',
+        \ })
+
+  if l:buf <= 0
+    echohl WarningMsg
+    echomsg 'Failed to start popup command: ' . string(l:cmd)
+    echohl None
+    return -1
+  endif
+
+  let l:popup_id = popup_create(l:buf, {
+        \ 'title': l:title,
+        \ 'pos': 'center',
+        \ 'minwidth': 80,
+        \ 'minheight': 20,
+        \ 'maxwidth': max([&columns - 4, 20]),
+        \ 'maxheight': max([&lines - 4, 10]),
+        \ 'border': [],
+        \ 'padding': [0, 1, 0, 1],
+        \ 'drag': 1,
+        \ 'resize': 1,
+        \ })
+
+  let g:last_terminal_popup = l:popup_id
+  call win_execute(l:popup_id, 'startinsert')
+  return l:popup_id
+endfunction
+
+function! MoveTerminalPopup(dline, dcol) abort
+  let l:popup_id = s:GetTerminalPopupId()
+  if l:popup_id == 0
+    return 0
+  endif
+
+  let l:pos = popup_getpos(l:popup_id)
+  call popup_move(l:popup_id, {
+        \ 'line': max([1, l:pos.line + a:dline]),
+        \ 'col': max([1, l:pos.col + a:dcol]),
+        \ })
+  return l:popup_id
+endfunction
+
+function! ResizeTerminalPopup(dwidth, dheight) abort
+  let l:popup_id = s:GetTerminalPopupId()
+  if l:popup_id == 0
+    return 0
+  endif
+
+  let l:pos = popup_getpos(l:popup_id)
+  call popup_move(l:popup_id, {
+        \ 'minwidth': max([20, l:pos.width + a:dwidth]),
+        \ 'maxwidth': max([20, l:pos.width + a:dwidth]),
+        \ 'minheight': max([10, l:pos.height + a:dheight]),
+        \ 'maxheight': max([10, l:pos.height + a:dheight]),
+        \ })
+  return l:popup_id
+endfunction
+
+command! TerminalPopup call OpenTerminalPopup()
+command! CopilotPopup call OpenTerminalPopup('copilot', ' Copilot ')
+command! LazygitPopup call OpenTerminalPopup('lazygit', ' Lazygit ')
+
+nnoremap <leader>ps <Cmd>TerminalPopup<CR>
+nnoremap <leader>pc <Cmd>CopilotPopup<CR>
+nnoremap <leader>pg <Cmd>LazygitPopup<CR>
+nnoremap <leader>ph <Cmd>call MoveTerminalPopup(0, -3)<CR>
+nnoremap <leader>pj <Cmd>call MoveTerminalPopup(1, 0)<CR>
+nnoremap <leader>pk <Cmd>call MoveTerminalPopup(-1, 0)<CR>
+nnoremap <leader>pl <Cmd>call MoveTerminalPopup(0, 3)<CR>
+nnoremap <leader>pH <Cmd>call ResizeTerminalPopup(-4, 0)<CR>
+nnoremap <leader>pJ <Cmd>call ResizeTerminalPopup(0, 2)<CR>
+nnoremap <leader>pK <Cmd>call ResizeTerminalPopup(0, -2)<CR>
+nnoremap <leader>pL <Cmd>call ResizeTerminalPopup(4, 0)<CR>
+tnoremap <leader>ph <C-\><C-n><Cmd>call MoveTerminalPopup(0, -3)<CR>i
+tnoremap <leader>pj <C-\><C-n><Cmd>call MoveTerminalPopup(1, 0)<CR>i
+tnoremap <leader>pk <C-\><C-n><Cmd>call MoveTerminalPopup(-1, 0)<CR>i
+tnoremap <leader>pl <C-\><C-n><Cmd>call MoveTerminalPopup(0, 3)<CR>i
+tnoremap <leader>pH <C-\><C-n><Cmd>call ResizeTerminalPopup(-4, 0)<CR>i
+tnoremap <leader>pJ <C-\><C-n><Cmd>call ResizeTerminalPopup(0, 2)<CR>i
+tnoremap <leader>pK <C-\><C-n><Cmd>call ResizeTerminalPopup(0, -2)<CR>i
+tnoremap <leader>pL <C-\><C-n><Cmd>call ResizeTerminalPopup(4, 0)<CR>i

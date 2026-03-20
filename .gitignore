@@ -50,3 +50,9 @@ Thumbs.db
 
 dotfiles_package/
 dotfiles_package_*
+
+# Vim swap files
+*.swp
+*.swo
+.*.swp
+.*.swo

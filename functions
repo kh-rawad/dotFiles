@@ -6,19 +6,19 @@ function extract() {
         echo "Extracts the specified archive file."
         return 1
     fi
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2)   tar xvjf $1     ;;
-            *.tar.gz)    tar xvzf $1     ;;
-            *.bz2)       bunzip2 $1      ;;
-            *.rar)       unrar x $1      ;;
-            *.gz)        gunzip $1       ;;
-            *.tar)       tar xvf $1      ;;
-            *.tbz2)      tar xvjf $1     ;;
-            *.tgz)       tar xvzf $1     ;;
-            *.zip)       unzip $1        ;;
-            *.Z)         uncompress $1   ;;
-            *.7z)        7z x $1         ;;
+    if [ -f "$1" ] ; then
+        case "$1" in
+            *.tar.bz2)   tar xvjf "$1"     ;;
+            *.tar.gz)    tar xvzf "$1"     ;;
+            *.bz2)       bunzip2 "$1"      ;;
+            *.rar)       unrar x "$1"      ;;
+            *.gz)        gunzip "$1"       ;;
+            *.tar)       tar xvf "$1"      ;;
+            *.tbz2)      tar xvjf "$1"     ;;
+            *.tgz)       tar xvzf "$1"     ;;
+            *.zip)       unzip "$1"        ;;
+            *.Z)         uncompress "$1"   ;;
+            *.7z)        7z x "$1"         ;;
             *)           echo "'$1' cannot be extracted via >extract<" ;;
         esac
     else
@@ -74,17 +74,22 @@ function treee(){
     #     2nd sed --> replace higher level folder names with dashes
     #     3rd sed --> indent graph and add leading vertical bar
     topFolders=$(ls -aF -1 | grep "/" | wc -l);
-    test $topFolders -ne 0 || echo "   --> no subfolders";
+    test "$topFolders" -ne 0 || echo "   --> no subfolders";
 }
 
 # Get OS and architecture
 get_os() {
     case "$OSTYPE" in
+        linux-android*) echo "android" ;;
         darwin*)  echo "macos" ;;
         linux*)   echo "linux" ;;
         msys*|cygwin*|mingw*) echo "windows" ;;
         *)        echo "unknown" ;;
     esac
+}
+
+is_termux() {
+    [[ "${OSTYPE:-}" == linux-android* ]] || [[ "${PREFIX:-}" == */com.termux/files/usr ]]
 }
 
 get_arch() {
@@ -117,11 +122,20 @@ function install_font_zip(){
     unzip "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
 
     # Move the font files to the system fonts directory
-    [[ -d $HOME/.local/share/fonts ]] || mkdir -p $HOME/.local/share/fonts
-    mv "$TEMP_DIR"/*.{ttf,otf} $HOME/.local/share/fonts/
+    [[ -d "$HOME/.local/share/fonts" ]] || mkdir -p "$HOME/.local/share/fonts"
+    shopt -s nullglob
+    local font_files=("$TEMP_DIR"/*.ttf "$TEMP_DIR"/*.otf)
+    if [[ ${#font_files[@]} -gt 0 ]]; then
+        mv "${font_files[@]}" "$HOME/.local/share/fonts/"
+    fi
+    shopt -u nullglob
 
-    # Update the font cache
-    fc-cache -f -v
+    # Update the font cache when fontconfig is available.
+    if command -v fc-cache >/dev/null 2>&1; then
+        fc-cache -f -v
+    else
+        echo "Skipping font cache refresh: fc-cache is not available."
+    fi
 
     # Clean up
     rm -rf "$TEMP_DIR"
@@ -142,7 +156,7 @@ function manual_install() {
         echo "Usage: manual_install <url> <binary_name> <destination_dir>"
         return 1
     fi
-    if [[ ! -d $dest_dir ]]; then
+    if [[ ! -d "$dest_dir" ]]; then
         mkdir -p "$dest_dir" || { echo "Failed to create directory $dest_dir"; return 1; }
     fi
 
@@ -169,16 +183,25 @@ function manual_install() {
         if [[ "$executable" == "exec" || "$executable" == "executable" ]]; then
             chmod +x ./*
         fi
-        mv ./* "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+        shopt -s nullglob
+        local extracted_files=(./*)
+        shopt -u nullglob
+        if [[ ${#extracted_files[@]} -eq 0 ]]; then
+            echo "Move failed: no files extracted!"
+            cd - >/dev/null || true
+            rm -rf "$TMPDIR"
+            return 1
+        fi
+        mv "${extracted_files[@]}" "$dest_dir"/ || { echo "Move failed!"; cd - >/dev/null || true; rm -rf "$TMPDIR"; return 1; }
     else
         if [[ "$executable" == "exec" || "$executable" == "executable" ]]; then
-            chmod +x "$bin_name" || { echo "chmod failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+            chmod +x "$bin_name" || { echo "chmod failed!"; cd - >/dev/null || true; rm -rf "$TMPDIR"; return 1; }
         fi
         ls
-        mv "$bin_name" "$dest_dir"/ || { echo "Move failed!"; cd -; rm -rf "$TMPDIR"; return 1; }
+        mv "$bin_name" "$dest_dir"/ || { echo "Move failed!"; cd - >/dev/null || true; rm -rf "$TMPDIR"; return 1; }
     fi
     echo "$bin_name installed to $dest_dir"
-    cd -
+    cd - >/dev/null
 }
 
 function run_install_script() {

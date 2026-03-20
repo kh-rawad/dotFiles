@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 # create a DotFiles package for offline installation
 source "$(dirname "$0")/setEnv"
 if [[ -z $SYSTEM_INFO ]]; then
