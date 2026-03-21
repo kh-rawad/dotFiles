@@ -142,6 +142,16 @@ else
         "$HOME/.vim/pack/github/start/copilot.vim"
     echo "Open Vim and run :Copilot setup to complete installation"
 fi
+### additional steps for termux on android (copilot-cli)
+if is_termux; then
+   pkg install -y build-essential python
+   npm install -y -g node-gyp node-pty
+   npm install -y -g @github/copilot
+
+   mkdir -p /data/data/com.termux/files/usr/lib/node_modules/@github/copilot/prebuilds/android-arm64 
+   cp /data/data/com.termux/files/usr/lib/node_modules/node-pty/build/Release/pty.node /data/data/com.termux/files/usr/lib/node_modules/@github/copilot/prebuilds/android-arm64/pty.node
+fi
+echo "to use copilot RUN: copilot auth login"
 
 ## set Default shell
 #echo "set default shell"
