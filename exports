@@ -5,7 +5,9 @@ SHELL=$(ps -ocomm= -q $$)
 
 # Personal binaries
 export PATH=~/bin:~/.local/bin:~/etc/scripts:${PATH}
-export TERM=xterm-256color
+if [ -z "${TMUX:-}" ] && [ "${TERM:-}" != "dumb" ]; then
+    export TERM=xterm-256color
+fi
 export EDITOR=/usr/bin/vim
 export ENVIRONMENT=development
 
