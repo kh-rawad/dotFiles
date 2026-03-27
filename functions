@@ -77,21 +77,34 @@ function treee(){
     test "$topFolders" -ne 0 || echo "   --> no subfolders";
 }
 
-# Get OS and architecture
+# Get OS type
 get_os() {
     case "$OSTYPE" in
         linux-android*) echo "android" ;;
         darwin*)  echo "macos" ;;
         linux*)   echo "linux" ;;
-        msys*|cygwin*|mingw*) echo "windows" ;;
+        msys*|cygwin*|mingw*) echo "windows(wsl)" ;;
         *)        echo "unknown" ;;
     esac
 }
 
+# Detect if running in Termux
 is_termux() {
     [[ "${OSTYPE:-}" == linux-android* ]] || [[ "${PREFIX:-}" == */com.termux/files/usr ]]
 }
 
+# Detect if running in WSL
+is_wsl() {
+    # Check for WSL-specific environment or /proc/version
+    if grep -qiE 'microsoft|wsl|MINGW' /proc/version 2>/dev/null; then
+        return 0
+    fi
+    if [ -n "$WSL_DISTRO_NAME" ] || [ -n "$WSL_INTEROP" ]; then
+        return 0
+    fi
+    return 1
+}
+# Get architecture
 get_arch() {
     local arch=$(uname -m)
     case "$arch" in
@@ -228,7 +241,7 @@ function run_install_script() {
         cd "$dest" || { echo "Failed to change directory to $dest"; return 1; }
         if [[ -n "$run_cmd" ]]; then
             echo "Running command: $run_cmd"
-            $run_cmd || { echo "Failed to run command: $run_cmd"; return 1; }
+            eval "$run_cmd" || { echo "Failed to run command: $run_cmd"; return 1; }
         else
             echo "Running default install script: ./install.sh"
             ./install.sh || { echo "Failed to run install.sh"; return 1; }

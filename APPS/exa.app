@@ -9,7 +9,7 @@ elif is_termux; then
     wget -q -O exa-linux-armv7-v0.10.1.zip https://github.com/ogham/exa/releases/download/v0.10.1/exa-linux-armv7-v0.10.1.zip
     unzip -o exa-linux-armv7-v0.10.1.zip -d source
 elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
-    wget -q -O exa-linux-armv7-v0.10.1.zip https://github.com/ogham/exa/releases/download/v0.10.1/exa-linux-x86_64-v0.10.1.zip
+    wget -q -O exa-linux-x86_64-v0.10.1.zip https://github.com/ogham/exa/releases/download/v0.10.1/exa-linux-x86_64-v0.10.1.zip
     unzip -o exa-linux-x86_64-v0.10.1.zip -d source
 fi
 

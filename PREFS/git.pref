@@ -1,0 +1,4 @@
+echo "--- Configuring Git"
+git config --global core.autocrlf input
+git config --global user.name "$USER"
+git config --global user.email "$USER@$HOSTNAME"

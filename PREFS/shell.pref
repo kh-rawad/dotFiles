@@ -1,0 +1,78 @@
+echo "--- Configuring Shell"
+## set Default shell
+echo "set default shell"
+ls /etc/shells
+
+echo "Run chsh -s $(which zsh) to set Zsh as default shell"
+#echo "Changing default shell to Zsh"
+#chsh -s "$(command -v zsh)"
+
+# echo "Installing .Profile";
+# [[ ! -f $HOME/.profile ]] && touch $HOME/.profile
+# grep -q DOTFILES $HOME/.profile
+# if [ $? -eq 1 ]; then
+#     echo "Updating .profile"
+#     cat <<EOT >> $HOME/.profile
+# #[DOTFILES] execute .bashrc for non-login shells.
+# if [ -n "\$BASH_VERSION" ]; then
+#     if [ -f "\$HOME/.bashrc" ]; then
+#         . "\$HOME/.bashrc"
+#     fi
+# fi
+# #[DOTFILES]
+# EOT
+# else
+#     echo "please remove any [DOTFILES] lines in [$HOME/.profile] before update" 
+# fi
+
+# NVM exports
+echo "exporting NVM (Node Version Manager) to shell"
+NVM_BLOCK='
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+nvm install 18
+'
+echo "$NVM_BLOCK" >> ./exports
+
+
+
+# exa exports
+echo "alias ls='exa -G --icons --group-directories-first'" >> ./aliases
+
+BASH_EXA_COMPLETIONS="${DOTFILES_FOLDER}/SHELLS/BASH/exa/completions"
+ZSH_EXA_COMPLETIONS="${DOTFILES_FOLDER}/SHELLS/ZSH/exa/completions"
+
+if [[ -d "$BASH_EXA_COMPLETIONS" ]]; then
+    echo "#exa exports" >> ./SHELLS/BASH/bashrc
+    echo "source \"${BASH_EXA_COMPLETIONS}\" 2>/dev/null" >> ./SHELLS/BASH/bashrc
+fi
+
+if [[ -d "$ZSH_EXA_COMPLETIONS" ]]; then
+    echo "#exa exports" >> ./SHELLS/ZSH/zshrc
+    echo "source \"${ZSH_EXA_COMPLETIONS}\" 2>/dev/null" >> ./SHELLS/ZSH/zshrc
+fi
+
+
+# Setup fzf
+# ---------
+
+FZF_OPTS='export FZF_DEFAULT_OPTS="--height 40% --tmux bottom,40% --layout reverse --border"'
+
+if [[ -n "$ZSH_VERSION" ]]; then
+    FZF_SHELL="zsh"
+    FZF_EVAL="fzf --zsh"
+else
+    FZF_SHELL="bash"
+    FZF_EVAL="fzf --bash"
+fi
+
+cat >> ./exports << EOF
+# fzf exports
+if [[ ! "\$PATH" == *\$HOME/.fzf/bin* ]]; then
+  PATH="\${PATH:+\${PATH}:}\$HOME/.fzf/bin"
+fi
+eval "\$($FZF_EVAL)"
+source "\${XDG_CONFIG_HOME:-\$HOME/.config}"/fzf/fzf.${FZF_SHELL}
+EOF
+echo "$FZF_OPTS" >> ./exports

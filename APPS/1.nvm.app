@@ -1,4 +1,5 @@
 ## installs nvm (Node Version Manager)
+echo "--- Installing NVM (Node Version Manager)"
 if ! is_termux; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash   
     
@@ -9,6 +10,6 @@ if ! is_termux; then
     nvm install 18
 fi
 
-echo "NodeJS Version:" "$(node -v)"
-echo "NPM Version:" "$(npm -v)"
+echo "--- NodeJS Version:" "$(node -v)"
+echo "--- NPM Version:" "$(npm -v)"
 

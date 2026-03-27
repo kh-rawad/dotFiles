@@ -148,7 +148,7 @@ export ZSH_TMUX_AUTOQUIT="true"
 export ZSH_TMUX_AUTONAME_SESSION="true"
 ## if running in iTerm2
 [[ $TERM_PROGRAM == "iTerm.app" ]] && export ZSH_TMUX_ITERM2="true" || export ZSH_TMUX_ITERM2="false"
-
+export TERM=xterm-256color
 
 DOTFILES_FOLDER=~/.config/dotfiles
 
@@ -166,3 +166,4 @@ fi
 if [ -f $DOTFILES_FOLDER/exports ]; then
 source $DOTFILES_FOLDER/exports
 fi
+

@@ -15,6 +15,7 @@ DOTFILES_FOLDER="$HOME/.config/dotfiles"
 # export SYSTEMD_PAGER=
 
 ###################
+export TERM=xterm-256color
 
 # history setup
 export HISTCONTROL=ignoredups:ignorespace
@@ -124,22 +125,3 @@ if [ -f $DOTFILES_FOLDER/exports ]; then
 source $DOTFILES_FOLDER/exports
 fi
 
-
-# Setup fzf
-# ---------
-if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
-  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
-fi
-eval "$(fzf --bash)"
-
-# kubernetes completion
-if command -v kubectl >/dev/null 2>&1; then
-  source <(kubectl completion bash)
-  source <(kubeadm completion bash)
-  alias k=kubectl
-  complete -o default -F __start_kubectl k
-fi
-
-if command -v helm >/dev/null 2>&1; then
-  source <(helm completion bash)
-fi

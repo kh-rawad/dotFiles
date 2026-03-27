@@ -18,7 +18,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dense-analysis/ale'
 Plug 'morhetz/gruvbox'
-Plug 'junegunn/fzf', { 'do': 'fzf#install()' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug '~/VimSession_plug'
 call plug#end()
