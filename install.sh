@@ -36,29 +36,16 @@ if [[ ! $install_deps =~ ^([Yy][Ee][Ss]|[Yy])$ ]]; then
 else
     echo "Installing Dependencies"
     if is_termux; then
-        pkg update -y && pkg install -y vim curl wget git zsh tmux nodejs-lts fzf
+        pkg update -y && pkg install -y vim curl wget git zsh tmux nodejs-lts
         [[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
     elif [[ $OSTYPE == 'darwin'* ]]; then
-        brew install vim duf curl wget git tmux
+        brew install vim curl wget git tmux
         [[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
     elif [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
-        sudo apt update -y && sudo apt install -y vim exa duf curl wget git zsh tmux fonts-powerline 
+        sudo apt update -y && sudo apt install -y vim curl wget git zsh tmux 
         [[ $? -ne 0 ]] && echo "Failed to install dependencies" && exit 1
     fi
 
-    ## installs nvm (Node Version Manager)
-    if ! is_termux; then
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
-        
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-        nvm install 18
-    fi
-
-    echo "NodeJS Version:" "$(node -v)"
-    echo "NPM Version:" "$(npm -v)"
 fi
 
 ## install Fonts

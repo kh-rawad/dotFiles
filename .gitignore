@@ -36,18 +36,10 @@ TEST*.xml
 Thumbs.db
 
 # Applications
-*.app
 *.exe
 *.war
 
-# Large media files
-*.mp4
-*.tiff
-*.avi
-*.flv
-*.mov
-*.wmv
-
+# Package
 dotfiles_package/
 dotfiles_package_*
 
@@ -56,3 +48,6 @@ dotfiles_package_*
 *.swo
 .*.swp
 .*.swo
+
+# downloaded sources
+/APPS/source

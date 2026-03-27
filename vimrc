@@ -23,6 +23,11 @@ Plug 'junegunn/fzf.vim'
 Plug '~/VimSession_plug'
 call plug#end()
 
+"## NERDTree config
+autocmd BufEnter * if !argc() | NERDTreeMirror | endif
+
+
+"## vimsession cinfig
 let g:vimsession_directory = '~/.vim_sessions'
 let g:vimsession_auto_load = 1
 let g:vimsession_auto_save = 1
@@ -87,6 +92,10 @@ set expandtab
 "
 "
 "------------------------------------------------------------
+" USER COMMANDS
+" delete open buffers and reopen current file
+command! Clean %bd|e#
+
 "------------------------------------------------------------
 " Mappings {{{1
 "
@@ -98,6 +107,10 @@ let mapleader = "?"
 map Y y$
 " Map <C-L> (redraw screen) to also turn off search highlighting until the next search
 nnoremap <C-L> :nohl<CR><C-L>
+
+" Use Ctrl + j/k to cycle through buffers
+nnoremap <C-j> :bn<CR>
+nnoremap <C-k> :bp<CR>
 
 " disable modifyOtherKeys
 let &t_TI = ""
