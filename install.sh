@@ -2,6 +2,23 @@
 
 source "$(dirname "$0")/setEnv"
 
+build_localdist() {
+    LOCALDIST_DIR="./localdist"
+    LOCALDIST_DOTFILES_DIR="${LOCALDIST_DIR}/.config/dotfiles"
+
+    rm -rf "$LOCALDIST_DIR"
+    mkdir -p "$LOCALDIST_DOTFILES_DIR"
+
+    cp -f SHELLS/BASH/bashrc "${LOCALDIST_DIR}/.bashrc"
+    cp -f SHELLS/ZSH/zshrc "${LOCALDIST_DIR}/.zshrc"
+    cp -f aliases "${LOCALDIST_DOTFILES_DIR}/aliases"
+    cp -f exports "${LOCALDIST_DOTFILES_DIR}/exports"
+    cp -f functions "${LOCALDIST_DOTFILES_DIR}/functions"
+
+    export LOCALDIST_EXPORTS="${LOCALDIST_DOTFILES_DIR}/exports"
+    export LOCALDIST_ALIASES="${LOCALDIST_DOTFILES_DIR}/aliases"
+}
+
 echo "Detected system: $SYSTEM_INFO"
 if [[ -z "${SYSTEM_INFO:-}" ]]; then
     echo "System information not detected. Please set SYSTEM_INFO in setEnv file."
@@ -40,6 +57,8 @@ echo "################################################################"
 echo "Installing applications"
 echo "################################################################"
 
+build_localdist
+
 for app in ./APPS/*; do
     echo ">>> Installing $app"
     if source "$app"; then
@@ -69,12 +88,8 @@ echo "################################################################"
 [[ -d "$DOTFILES_FOLDER" ]] && echo "DotFiles folder exists continue" || mkdir -p "$DOTFILES_FOLDER"
 # install dotfiles
 echo "Installing BashRC"
-cp -f SHELLS/BASH/bashrc "$HOME/.bashrc"
+cp -f localdist/.bashrc "$HOME/.bashrc"
 echo "Installing ZshRC"
-cp -f SHELLS/ZSH/zshrc "$HOME/.zshrc"
-echo "Installing Aliases"
-cp -f aliases "$DOTFILES_FOLDER"
-echo "Installing Exports"
-cp -f exports "$DOTFILES_FOLDER"
-echo "Installing Functions"
-cp -f functions "$DOTFILES_FOLDER"
+cp -f localdist/.zshrc "$HOME/.zshrc"
+echo "Installing Dotfiles config"
+cp -rf localdist/.config/dotfiles/. "$DOTFILES_FOLDER/"

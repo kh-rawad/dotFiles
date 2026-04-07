@@ -51,3 +51,6 @@ dotfiles_package_*
 
 # downloaded sources
 /APPS/source
+
+# local staging output
+/localdist
