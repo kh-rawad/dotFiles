@@ -1,0 +1,127 @@
+---
+# Home Media Server – Docker Compose Stack
+#
+# Services included:
+#   - Jellyfin          – media server
+#   - Sonarr            – TV-show management
+#   - Radarr            – movie management
+#   - Prowlarr          – indexer/tracker management
+#   - qBittorrent       – torrent download client
+#   - Nginx Proxy Mgr   – reverse proxy with automated SSL
+#
+# Usage:
+#   cp .env.example .env   # fill in your values
+#   docker compose up -d
+
+services:
+
+  # ── Jellyfin ─────────────────────────────────────────────────────────────
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_ROOT}/jellyfin:/config
+      - ${MEDIA_ROOT}/movies:/data/movies
+      - ${MEDIA_ROOT}/tv:/data/tv
+      - ${MEDIA_ROOT}/music:/data/music
+    ports:
+      - "${JELLYFIN_HTTP_PORT}:8096"
+      - "${JELLYFIN_HTTPS_PORT}:8920"
+    networks:
+      - medianet
+
+  # ── Sonarr ───────────────────────────────────────────────────────────────
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_ROOT}/sonarr:/config
+      - ${MEDIA_ROOT}/tv:/tv
+      - ${MEDIA_ROOT}/downloads:/downloads
+    ports:
+      - "${SONARR_PORT}:8989"
+    networks:
+      - medianet
+
+  # ── Radarr ───────────────────────────────────────────────────────────────
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_ROOT}/radarr:/config
+      - ${MEDIA_ROOT}/movies:/movies
+      - ${MEDIA_ROOT}/downloads:/downloads
+    ports:
+      - "${RADARR_PORT}:7878"
+    networks:
+      - medianet
+
+  # ── Prowlarr ─────────────────────────────────────────────────────────────
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_ROOT}/prowlarr:/config
+    ports:
+      - "${PROWLARR_PORT}:9696"
+    networks:
+      - medianet
+
+  # ── qBittorrent ──────────────────────────────────────────────────────────
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=${QBITTORRENT_WEBUI_PORT}
+    volumes:
+      - ${CONFIG_ROOT}/qbittorrent:/config
+      - ${MEDIA_ROOT}/downloads:/downloads
+    ports:
+      - "${QBITTORRENT_WEBUI_PORT}:${QBITTORRENT_WEBUI_PORT}"
+      - "${QBITTORRENT_TCP_PORT}:6881/tcp"
+      - "${QBITTORRENT_UDP_PORT}:6881/udp"
+    networks:
+      - medianet
+
+  # ── Nginx Proxy Manager ──────────────────────────────────────────────────
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    volumes:
+      - ${CONFIG_ROOT}/nginx-proxy-manager/data:/data
+      - ${CONFIG_ROOT}/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+    ports:
+      - "${NPM_HTTP_PORT}:80"
+      - "${NPM_HTTPS_PORT}:443"
+      - "${NPM_ADMIN_PORT}:81"
+    networks:
+      - medianet
+
+networks:
+  medianet:
+    driver: bridge
