@@ -17,6 +17,8 @@ build_localdist() {
 
     export LOCALDIST_EXPORTS="${LOCALDIST_DOTFILES_DIR}/exports"
     export LOCALDIST_ALIASES="${LOCALDIST_DOTFILES_DIR}/aliases"
+    export LOCALDIST_BASHRC="${LOCALDIST_DIR}/.bashrc"
+    export LOCALDIST_ZSHRC="${LOCALDIST_DIR}/.zshrc"
 }
 
 echo "Detected system: $SYSTEM_INFO"

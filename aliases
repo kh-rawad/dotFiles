@@ -25,3 +25,4 @@ alias fuk='sudo $(history -p !!)'
 alias tn='tmux new-session -A -s $(basename "$PWD")'
 alias ta='tmux a'
 
+alias ls='eza -G --icons --group-directories-first'
