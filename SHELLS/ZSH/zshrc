@@ -124,7 +124,7 @@ fi
 ## key bindings
 FZF_ALT_C_COMMAND='find . -maxdepth 1'
 
-eval "$(fzf --zsh)"
+source "${XDG_CONFIG_HOME:-$HOME/.config}"/fzf/fzf.zsh 2>/dev/null
 
 
 

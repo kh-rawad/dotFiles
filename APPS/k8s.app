@@ -19,9 +19,12 @@ mv kubeadm "$HOME/.local/bin/"
 
 echo "--- kubectl and kubeadm installed successfully"
 
-echo """# Kubernetes tools completions
-source <(kubectl completion bash)
-source <(kubeadm completion bash)""" >> ./exports
+
+if [ -n "$BASH_VERSION" ]; then
+    echo """# Kubernetes tools completions
+    source <(kubectl completion bash)
+    source <(kubeadm completion bash)""" >> ./exports
+    echo "complete -F __start_kubectl k" >> ./exports
+fi
 
 echo "alias k=kubectl" >> ./aliases
-echo "complete -F __start_kubectl k" >> ./exports
