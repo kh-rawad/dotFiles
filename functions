@@ -77,6 +77,20 @@ function treee(){
     test "$topFolders" -ne 0 || echo "   --> no subfolders";
 }
 
+append_block_once() {
+    # Usage: append_block_once <target_file> <block_tag> <block_content>
+    # Appends block_content to target_file only when block_tag is not present.
+    local target_file="$1"
+    local block_tag="$2"
+    local block_content="$3"
+
+    if ! grep -q "${block_tag}" "$target_file" 2>/dev/null; then
+        {
+            echo "$block_content"
+        } >> "$target_file"
+    fi
+}
+
 # Get OS type
 get_os() {
     case "$OSTYPE" in
@@ -229,7 +243,6 @@ function run_install_script() {
         shift 3
         run_cmd="$run_cmd $*"
     fi
-    echo "-----------------------------------------------------------------------"
     echo "Installing from $url to $dest"
     [[ -z "$url" || -z "$dest" ]] && { echo "Usage: run_install_script <url> <destination> [run_cmd]"; return 1; }
     if [[ -d "$dest" ]]; then
@@ -252,4 +265,12 @@ function run_install_script() {
         return 1
     fi
     echo "$dest Installation completed successfully."
+}
+
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    command yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd < "$tmp"
+    [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
 }
