@@ -1,0 +1,95 @@
+{{- $root := . -}}
+{{- range $serviceName, $service := .Values.services }}
+{{- if $service.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "home-media-server.serviceFullname" (dict "root" $root "serviceName" $serviceName) }}
+  labels:
+    app.kubernetes.io/name: {{ include "home-media-server.name" $root }}
+    app.kubernetes.io/instance: {{ $root.Release.Name }}
+    app.kubernetes.io/component: {{ $serviceName }}
+spec:
+  replicas: {{ default 1 $service.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: {{ $root.Release.Name }}
+      app.kubernetes.io/component: {{ $serviceName }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "home-media-server.name" $root }}
+        app.kubernetes.io/instance: {{ $root.Release.Name }}
+        app.kubernetes.io/component: {{ $serviceName }}
+    spec:
+      securityContext:
+{{ toYaml $root.Values.podSecurityContext | indent 8 }}
+      containers:
+        - name: {{ $serviceName }}
+          image: {{ $service.image }}
+          imagePullPolicy: {{ default "IfNotPresent" $service.pullPolicy }}
+          securityContext:
+{{ toYaml (default $root.Values.securityContext $service.securityContext) | indent 12 }}
+          env:
+{{- if or (not (hasKey $service "includeIdentityEnv")) (index $service "includeIdentityEnv") }}
+            - name: PUID
+              value: {{ $root.Values.global.puid | quote }}
+            - name: PGID
+              value: {{ $root.Values.global.pgid | quote }}
+            - name: TZ
+              value: {{ $root.Values.global.tz | quote }}
+{{- end }}
+{{- range $envName, $envValue := $service.env }}
+            - name: {{ $envName }}
+              value: {{ $envValue | quote }}
+{{- end }}
+          ports:
+{{- range $port := $service.service.ports }}
+            - name: {{ $port.name }}
+              containerPort: {{ $port.targetPort }}
+              protocol: {{ default "TCP" $port.protocol }}
+{{- end }}
+          volumeMounts:
+{{- range $mount := $service.mounts }}
+            - name: {{ $mount.name }}
+              mountPath: {{ $mount.mountPath }}
+{{- end }}
+      volumes:
+{{- range $mount := $service.mounts }}
+        - name: {{ $mount.name }}
+          hostPath:
+{{- if eq $mount.pathType "config" }}
+            path: {{ printf "%s/%s" $root.Values.paths.configRoot $mount.subPath }}
+{{- else if eq $mount.pathType "media" }}
+            path: {{ printf "%s/%s" $root.Values.paths.mediaRoot $mount.subPath }}
+{{- else }}
+            path: {{ $mount.subPath }}
+{{- end }}
+            type: DirectoryOrCreate
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "home-media-server.serviceFullname" (dict "root" $root "serviceName" $serviceName) }}
+  labels:
+    app.kubernetes.io/name: {{ include "home-media-server.name" $root }}
+    app.kubernetes.io/instance: {{ $root.Release.Name }}
+    app.kubernetes.io/component: {{ $serviceName }}
+spec:
+  type: {{ default "ClusterIP" $service.service.type }}
+  selector:
+    app.kubernetes.io/instance: {{ $root.Release.Name }}
+    app.kubernetes.io/component: {{ $serviceName }}
+  ports:
+{{- range $port := $service.service.ports }}
+    - name: {{ $port.name }}
+      port: {{ $port.port }}
+      targetPort: {{ $port.targetPort }}
+      protocol: {{ default "TCP" $port.protocol }}
+{{- end }}
+---
+{{- end }}
+{{- end }}

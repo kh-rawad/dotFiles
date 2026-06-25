@@ -1,0 +1,12 @@
+Home Media Server chart deployed.
+
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+Get service endpoints:
+  kubectl get svc -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+If services use ClusterIP, expose them with one of:
+  - kubectl port-forward svc/<release>-home-media-server-jellyfin 8096:8096
+  - ingress resources (recommended)
+  - set .Values.services.<name>.service.type=LoadBalancer or NodePort

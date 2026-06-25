@@ -1,0 +1,42 @@
+{{- $root := . -}}
+{{- range $serviceName, $service := .Values.services }}
+{{- if and $service.enabled $service.ingress.enabled }}
+{{- $defaultPort := (index $service.service.ports 0).port -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "home-media-server.serviceFullname" (dict "root" $root "serviceName" $serviceName) }}
+  labels:
+    app.kubernetes.io/name: {{ include "home-media-server.name" $root }}
+    app.kubernetes.io/instance: {{ $root.Release.Name }}
+    app.kubernetes.io/component: {{ $serviceName }}
+{{- with $service.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{- if $service.ingress.className }}
+  ingressClassName: {{ $service.ingress.className }}
+{{- end }}
+{{- with $service.ingress.tls }}
+  tls:
+{{ toYaml . | indent 4 }}
+{{- end }}
+  rules:
+{{- range $host := $service.ingress.hosts }}
+    - host: {{ $host.host }}
+      http:
+        paths:
+{{- range $path := $host.paths }}
+          - path: {{ $path.path }}
+            pathType: {{ default "Prefix" $path.pathType }}
+            backend:
+              service:
+                name: {{ include "home-media-server.serviceFullname" (dict "root" $root "serviceName" $serviceName) }}
+                port:
+                  number: {{ default $defaultPort $path.port }}
+{{- end }}
+{{- end }}
+---
+{{- end }}
+{{- end }}
