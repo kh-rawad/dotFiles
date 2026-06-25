@@ -1,0 +1,260 @@
+nameOverride: ""
+fullnameOverride: ""
+
+global:
+  puid: 1000
+  pgid: 1000
+  tz: America/New_York
+
+paths:
+  configRoot: /mnt/store/the_rrrs/config
+  mediaRoot: /mnt/store/MEDIA
+
+podSecurityContext: {}
+securityContext: {}
+
+services:
+  jellyfin:
+    enabled: true
+    image: jellyfin/jellyfin:latest
+    pullPolicy: IfNotPresent
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      ports:
+        - name: http
+          port: 8096
+          targetPort: 8096
+          protocol: TCP
+        - name: https
+          port: 8920
+          targetPort: 8920
+          protocol: TCP
+    env: {}
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+        - host: jellyfin.home.arpa
+          paths:
+            - path: /
+              pathType: Prefix
+              port: 8096
+      tls: []
+    mounts:
+      - name: config
+        mountPath: /config
+        pathType: config
+        subPath: jellyfin
+      - name: movies
+        mountPath: /data/movies
+        pathType: media
+        subPath: movies
+      - name: tv
+        mountPath: /data/tv
+        pathType: media
+        subPath: tv
+      - name: music
+        mountPath: /data/music
+        pathType: media
+        subPath: music
+
+  sonarr:
+    enabled: true
+    image: lscr.io/linuxserver/sonarr:latest
+    pullPolicy: IfNotPresent
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      ports:
+        - name: http
+          port: 8989
+          targetPort: 8989
+          protocol: TCP
+    env: {}
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+        - host: sonarr.home.arpa
+          paths:
+            - path: /
+              pathType: Prefix
+              port: 8989
+      tls: []
+    mounts:
+      - name: config
+        mountPath: /config
+        pathType: config
+        subPath: Sonarr
+      - name: tv
+        mountPath: /tv
+        pathType: media
+        subPath: tv
+      - name: downloads
+        mountPath: /downloads
+        pathType: media
+        subPath: downloads
+
+  radarr:
+    enabled: true
+    image: lscr.io/linuxserver/radarr:latest
+    pullPolicy: IfNotPresent
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      ports:
+        - name: http
+          port: 7878
+          targetPort: 7878
+          protocol: TCP
+    env: {}
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+        - host: radarr.home.arpa
+          paths:
+            - path: /
+              pathType: Prefix
+              port: 7878
+      tls: []
+    mounts:
+      - name: config
+        mountPath: /config
+        pathType: config
+        subPath: Radarr
+      - name: movies
+        mountPath: /movies
+        pathType: media
+        subPath: movies
+      - name: downloads
+        mountPath: /downloads
+        pathType: media
+        subPath: downloads
+
+  prowlarr:
+    enabled: true
+    image: lscr.io/linuxserver/prowlarr:latest
+    pullPolicy: IfNotPresent
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      ports:
+        - name: http
+          port: 9696
+          targetPort: 9696
+          protocol: TCP
+    env: {}
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+        - host: prowlarr.home.arpa
+          paths:
+            - path: /
+              pathType: Prefix
+              port: 9696
+      tls: []
+    mounts:
+      - name: config
+        mountPath: /config
+        pathType: config
+        subPath: prowlarr
+
+  qbittorrent:
+    enabled: true
+    image: lscr.io/linuxserver/qbittorrent:latest
+    pullPolicy: IfNotPresent
+    replicaCount: 1
+    service:
+      type: ClusterIP
+      ports:
+        - name: webui
+          port: 8080
+          targetPort: 8080
+          protocol: TCP
+        - name: bt-tcp
+          port: 6881
+          targetPort: 6881
+          protocol: TCP
+        - name: bt-udp
+          port: 6881
+          targetPort: 6881
+          protocol: UDP
+    env:
+      WEBUI_PORT: "8080"
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+        - host: qbittorrent.home.arpa
+          paths:
+            - path: /
+              pathType: Prefix
+              port: 8080
+      tls: []
+    mounts:
+      - name: config
+        mountPath: /config
+        pathType: config
+        subPath: qBittorrent
+      - name: downloads
+        mountPath: /downloads
+        pathType: media
+        subPath: downloads
+
+  nginx-proxy-manager:
+    enabled: true
+    image: jc21/nginx-proxy-manager:latest
+    pullPolicy: IfNotPresent
+    replicaCount: 1
+    includeIdentityEnv: false
+    securityContext:
+      capabilities:
+        add:
+          - NET_BIND_SERVICE
+    service:
+      type: ClusterIP
+      ports:
+        - name: http
+          port: 80
+          targetPort: 80
+          protocol: TCP
+        - name: https
+          port: 443
+          targetPort: 443
+          protocol: TCP
+        - name: admin
+          port: 81
+          targetPort: 81
+          protocol: TCP
+    env:
+      SKIP_CERTBOT_OWNERSHIP: "true"
+      PUID: "0"
+      PGID: "0"
+    ingress:
+      enabled: true
+      className: "nginx"
+      annotations: {}
+      hosts:
+        - host: npm.home.arpa
+          paths:
+            - path: /
+              pathType: Prefix
+              port: 81
+      tls: []
+    mounts:
+      - name: npm-data
+        mountPath: /data
+        pathType: config
+        subPath: nginx-proxy-manager/data
+      - name: npm-letsencrypt
+        mountPath: /etc/letsencrypt
+        pathType: config
+        subPath: nginx-proxy-manager/letsencrypt

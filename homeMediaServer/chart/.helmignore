@@ -1,0 +1,13 @@
+# Common VCS and editor artifacts
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Archives
+*.tgz
+*.tar.gz
