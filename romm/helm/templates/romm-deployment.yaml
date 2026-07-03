@@ -26,7 +26,7 @@ spec:
           command:
             - sh
             - -c
-            - until nc -z romm-db 3306; do echo "waiting for mariadb..."; sleep 3; done
+            - until nc -z {{ include "romm.dbServiceName" . }} 3306; do echo "waiting for mariadb..."; sleep 3; done
       containers:
         - name: romm
           image: "{{ .Values.romm.image.repository }}:{{ .Values.romm.image.tag }}"
@@ -36,7 +36,7 @@ spec:
               protocol: TCP
           env:
             - name: DB_HOST
-              value: "romm-db"
+              value: {{ include "romm.dbServiceName" . | quote }}
             - name: DB_NAME
               value: {{ .Values.mariadb.database | quote }}
             - name: DB_USER
@@ -70,6 +70,16 @@ spec:
                 secretKeyRef:
                   name: {{ include "romm.fullname" . }}-secret
                   key: STEAMGRIDDB_API_KEY
+            - name: IGDB_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "romm.fullname" . }}-secret
+                  key: IGDB_CLIENT_ID
+            - name: IGDB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "romm.fullname" . }}-secret
+                  key: IGDB_CLIENT_SECRET
           volumeMounts:
             - name: resources
               mountPath: /romm/resources
@@ -91,9 +101,12 @@ spec:
         - name: library
           hostPath:
             path: {{ .Values.romm.hostPaths.library }}
+            type: Directory
         - name: assets
           hostPath:
             path: {{ .Values.romm.hostPaths.assets }}
+            type: DirectoryOrCreate
         - name: config
           hostPath:
             path: {{ .Values.romm.hostPaths.config }}
+            type: DirectoryOrCreate

@@ -4,8 +4,8 @@ fullnameOverride: ""
 romm:
   image:
     repository: rommapp/romm
-    tag: latest
-    pullPolicy: Always
+    tag: "3.10.1"
+    pullPolicy: IfNotPresent
 
   service:
     type: ClusterIP
@@ -27,21 +27,22 @@ romm:
   env:
     hasheousApiEnabled: "true"
     screenscraper:
-      user: "aboal3bdd"
-      password: "nFtcAjWfu8ebQB"
+      user: ""
+      password: ""
     retroachievements:
-      apiKey: "mPA4OTnlWjjMQiGwfqfcyc3z0zb3tyIc"
+      apiKey: ""
     steamgriddb:
       apiKey: ""
-    IGDB_CLIENT_ID: "hvvyir47nj2u3sfqu37bvkqwz2yf5g"
-    IGDB_CLIENT_SECRET: "lbefkairi3p3a0f23j5i6be1qm9l3k"
+    igdb:
+      clientId: ""
+      clientSecret: ""
 
 
 mariadb:
   image:
     repository: mariadb
-    tag: latest
-    pullPolicy: Always
+    tag: "11.4.3"
+    pullPolicy: IfNotPresent
 
   database: romm
   user: romm-user

@@ -54,3 +54,6 @@ dotfiles_package_*
 
 # local staging output
 /localdist
+
+# local env files
+romm/helm/.env
