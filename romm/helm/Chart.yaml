@@ -1,0 +1,12 @@
+apiVersion: v2
+name: romm
+description: RomM — self-hosted ROM manager
+type: application
+version: 0.1.0
+appVersion: "latest"
+keywords:
+  - romm
+  - gaming
+  - rom-manager
+sources:
+  - https://github.com/rommapp/romm

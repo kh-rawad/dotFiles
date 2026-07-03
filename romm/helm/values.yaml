@@ -1,0 +1,68 @@
+nameOverride: ""
+fullnameOverride: ""
+
+romm:
+  image:
+    repository: rommapp/romm
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+
+  # Host paths on the k8s node — matched to /mnt/store/romm layout
+  hostPaths:
+    library: /mnt/store/romm/GAMES   # contains roms/ and bios/
+    assets:  /mnt/store/romm/assets
+    config:  /mnt/store/romm/config
+
+  persistence:
+    resources:
+      size: 5Gi
+    redisData:
+      size: 1Gi
+
+  env:
+    hasheousApiEnabled: "true"
+    screenscraper:
+      user: "aboal3bdd"
+      password: "nFtcAjWfu8ebQB"
+    retroachievements:
+      apiKey: "mPA4OTnlWjjMQiGwfqfcyc3z0zb3tyIc"
+    steamgriddb:
+      apiKey: ""
+    IGDB_CLIENT_ID: "hvvyir47nj2u3sfqu37bvkqwz2yf5g"
+    IGDB_CLIENT_SECRET: "lbefkairi3p3a0f23j5i6be1qm9l3k"
+
+
+mariadb:
+  image:
+    repository: mariadb
+    tag: latest
+    pullPolicy: Always
+
+  database: romm
+  user: romm-user
+
+  persistence:
+    size: 10Gi
+
+# Sensitive credentials — set at install time via --set or a values override file.
+# Generate rommAuthSecretKey with: openssl rand -hex 32
+
+ingress:
+  enabled: true
+  className: nginx
+  host: romm.home.arpa
+secrets:
+  dbPassword: ""
+  dbRootPassword: ""
+  rommAuthSecretKey: ""
+# helm install romm /home/rawad/source/dotFiles/romm/helm/ \
+#   --namespace romm \
+#   --set secrets.dbPassword='YOUR_DB_PASSWORD' \
+#   --set secrets.dbRootPassword='YOUR_ROOT_PASSWORD' \
+#   --set secrets.rommAuthSecretKey="$(openssl rand -hex 32)"
+# kubectl get pods -n romm -w
