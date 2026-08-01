@@ -21,8 +21,8 @@
         "localdist",
         "iabbrev",
         "TRIVY",
-  "stefanzweifel"
-
+        "stefanzweifel",
+        "shellcheck",
     ],
     "flagWords": []
 }
