@@ -86,7 +86,7 @@ On a fresh system, `setEnv` detects the OS/arch and `install.sh` handles the res
 
 ## Directory layout
 
-```
+```bash
 dotFiles/
 ├── install.sh            # Main bootstrap script
 ├── setEnv                # Sets DOTFILES_FOLDER, SYSTEM_INFO, sources functions
