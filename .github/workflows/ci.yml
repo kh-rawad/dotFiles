@@ -20,7 +20,7 @@ jobs:
 
       - name: Install the files
         run: |
-          echo $GITHUB_WORKSPACE
+          echo "$GITHUB_WORKSPACE"
           ./install.sh
       - name: Run source bashrc
         run: |

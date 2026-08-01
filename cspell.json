@@ -20,7 +20,8 @@
         "Skippable",
         "localdist",
         "iabbrev",
-        "TRIVY"
+        "TRIVY",
+  "stefanzweifel"
 
     ],
     "flagWords": []
