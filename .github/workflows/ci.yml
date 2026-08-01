@@ -2,8 +2,6 @@
 name: CI
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -22,9 +20,12 @@ jobs:
 
       - name: Install the files
         run: |
-          echo $GITHUB_WORKSPACE
+          echo "$GITHUB_WORKSPACE"
           ./install.sh
+
       - name: Run source bashrc
         run: |
-          echo restarting bash
+          echo "restarting bash"
+          bash --login -c "source ~/.bashrc"
+          # shellcheck disable=SC1090
           source ~/.bashrc

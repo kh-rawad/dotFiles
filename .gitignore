@@ -54,3 +54,7 @@ dotfiles_package_*
 
 # local staging output
 /localdist
+
+# MegaLinter generated artifacts
+/megalinter-reports/
+/mega-linter.log
