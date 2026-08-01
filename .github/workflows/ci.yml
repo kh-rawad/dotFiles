@@ -24,5 +24,6 @@ jobs:
           ./install.sh
       - name: Run source bashrc
         run: |
-          echo restarting bash
+          echo "restarting bash"
+          bash --login -c "source ~/.bashrc"
           source ~/.bashrc
