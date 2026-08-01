@@ -22,8 +22,10 @@ jobs:
         run: |
           echo "$GITHUB_WORKSPACE"
           ./install.sh
+
       - name: Run source bashrc
         run: |
           echo "restarting bash"
           bash --login -c "source ~/.bashrc"
+          # shellcheck disable=SC1090
           source ~/.bashrc
