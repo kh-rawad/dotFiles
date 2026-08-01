@@ -22,7 +22,8 @@
         "iabbrev",
         "TRIVY",
         "stefanzweifel",
-        "shellcheck"
+        "shellcheck",
+        "pipefail"
     ],
     "flagWords": []
 }
