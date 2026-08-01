@@ -3,9 +3,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -13,10 +13,10 @@ permissions:
 
 jobs:
   build:
+    name: CI / Build # <- this is the check name you’ll search for
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install the files
         run: |
@@ -24,8 +24,7 @@ jobs:
           ./install.sh
 
       - name: Run source bashrc
+        shell: bash
         run: |
-          echo "restarting bash"
+          set -euo pipefail
           bash --login -c "source ~/.bashrc"
-          # shellcheck disable=SC1090
-          source ~/.bashrc
