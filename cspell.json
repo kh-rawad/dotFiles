@@ -20,11 +20,8 @@
         "Skippable",
         "localdist",
         "iabbrev",
-        "TRIVY",
-        "hte"
+        "TRIVY"
 
     ],
-    "flagWords": [
-        "hte"
-    ]
+    "flagWords": []
 }

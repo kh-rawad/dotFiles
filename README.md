@@ -6,21 +6,22 @@ Personal dotfiles repo for fresh system bootstrapping — shell configs, aliases
 
 ## What's in here
 
-| Path | Purpose |
-|---|---|
-| `SHELLS/BASH/bashrc` | Bash startup config |
-| `SHELLS/ZSH/zshrc` | Zsh startup config |
-| `aliases` | Shared shell aliases (eza, tmux, extract, git helpers, etc.) |
-| `exports` | PATH, locale, and editor defaults |
-| `functions` | Reusable bash functions (`get_os`, `is_termux`, `run_install_script`, font installer, etc.) |
-| `abbreviations` | Vim-style abbreviations for the shell |
-| `tmux.conf` | Tmux configuration |
-| `vimrc` | Vim configuration |
-| `setEnv` | Environment bootstrap — sets `DOTFILES_FOLDER`, `SYSTEM_INFO`, sources `functions` |
-| `APPS/` | Per-application installers (sourced, not executed) |
-| `PREFS/` | Post-install preferences (git config, shell finalization) |
+| Path                 | Purpose                                                                                     |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| `SHELLS/BASH/bashrc` | Bash startup config                                                                         |
+| `SHELLS/ZSH/zshrc`   | Zsh startup config                                                                          |
+| `aliases`            | Shared shell aliases (eza, tmux, extract, git helpers, etc.)                                |
+| `exports`            | PATH, locale, and editor defaults                                                           |
+| `functions`          | Reusable bash functions (`get_os`, `is_termux`, `run_install_script`, font installer, etc.) |
+| `abbreviations`      | Vim-style abbreviations for the shell                                                       |
+| `tmux.conf`          | Tmux configuration                                                                          |
+| `vimrc`              | Vim configuration                                                                           |
+| `setEnv`             | Environment bootstrap — sets `DOTFILES_FOLDER`, `SYSTEM_INFO`, sources `functions`          |
+| `APPS/`              | Per-application installers (sourced, not executed)                                          |
+| `PREFS/`             | Post-install preferences (git config, shell finalization)                                   |
 
 The config files are installed to:
+
 - `~/.bashrc`
 - `~/.zshrc`
 - `~/.config/dotfiles/` (for aliases, exports, functions, abbreviations)
@@ -53,7 +54,8 @@ On a fresh system, `setEnv` detects the OS/arch and `install.sh` handles the res
    - Skippable — set `PACKAGING_START` to any value to bypass the prompt.
 
 3. **Builds a local dist** — Assembles a temporary `localdist/` tree with the right file layout:
-   ```
+
+   ```bash
    localdist/
    ├── .bashrc
    ├── .zshrc
@@ -73,12 +75,12 @@ On a fresh system, `setEnv` detects the OS/arch and `install.sh` handles the res
 
 ## Supported platforms
 
-| Platform | `$SYSTEM_INFO` | Package manager |
-|---|---|---|
-| Android (Termux) | `android-amd64` / `android-arm64` | `pkg` |
-| macOS | `macos-amd64` / `macos-arm64` | `brew` |
-| Debian / Ubuntu / Mint | `linux-amd64` / `linux-arm64` | `apt` |
-| WSL | `windows(wsl)-amd64` | `apt` via the Linux distribution |
+| Platform               | `$SYSTEM_INFO`                    | Package manager                  |
+| ---------------------- | --------------------------------- | -------------------------------- |
+| Android (Termux)       | `android-amd64` / `android-arm64` | `pkg`                            |
+| macOS                  | `macos-amd64` / `macos-arm64`     | `brew`                           |
+| Debian / Ubuntu / Mint | `linux-amd64` / `linux-arm64`     | `apt`                            |
+| WSL                    | `windows(wsl)-amd64`              | `apt` via the Linux distribution |
 
 ---
 
