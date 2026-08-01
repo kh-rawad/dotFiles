@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   megalinter:
-    name: CI / MegaLinter   # <- required-check name to select
+    name: CI / MegaLinter # <- required-check name to select
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

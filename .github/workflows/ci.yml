@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   build:
-    name: CI / Build   # <- this is the check name you’ll search for
+    name: CI / Build # <- this is the check name you’ll search for
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
