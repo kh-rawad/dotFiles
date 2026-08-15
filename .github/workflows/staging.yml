@@ -47,6 +47,7 @@ jobs:
             mega-linter.log
 
       - name: Create Pull Request with applied fixes
+        id: create_pull_request_with_applied_fixes
         uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
