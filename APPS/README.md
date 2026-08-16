@@ -12,7 +12,7 @@ declared in `../functions`.
 `install.sh` iterates the directory in glob order, so the numeric prefix
 controls install sequence.  Lower numbers run first.
 
-```
+```bash
 APPS/
 ├── 1.nvm.app          # must be first — other tools may need Node
 ├── 2.tmux.app         # shell multiplexer, no hard deps
@@ -150,7 +150,7 @@ echo "--- <Tool Name> installed successfully"
    and watch the output for this app's section.
 4. **Verify** the tool works in a fresh shell: `command -v <tool>` should
    resolve to `~/.local/bin/<tool>` or the Homebrew path.
-5. **Update this README** if the app's behaviour or platform support changed.
+5. **Update this README** if the app's behavior or platform support changed.
 
 ---
 
@@ -160,5 +160,5 @@ echo "--- <Tool Name> installed successfully"
 |---|---|---|
 | File | `<order>.<lowercase-name>.app` | `4.vim.app` |
 | Echo banner | `--- Installing <Title Case Name>` | `--- Installing VIM` |
-| Variable prefix | `PACKAGE_NAME`, `PACKAGE_VERSION`, `REQUIRED_VERSION`, `VERSION` | `VERSION="3.5.0"` |
-| Platforms | `darwin*`, `is_termux`, `linux-gnu*` / `debian|ubuntu|mint` | see any existing file |
+| Variable prefix | `` `PACKAGE_NAME` / `PACKAGE_VERSION` / `REQUIRED_VERSION` / `VERSION` `` | `VERSION="3.5.0"` |
+| Platforms | `` `darwin*`, `is_termux`, `linux-gnu*` / `debian` / `ubuntu` / `mint` `` | see any existing file |
