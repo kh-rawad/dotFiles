@@ -3,7 +3,8 @@ alias la='eza -a --icons=always --group-directories-first'
 alias ll='eza -l --icons=always --group-directories-first'
 alias lll='eza -la --icons=always --group-directories-first'
 
-alias vis="sudo vi"
+alias vi="vim"
+alias vis="sudo vim"
 alias ping="ping -c3"
 alias ctl="sudo systemctl"
 alias mkdir='mkdir -p'
@@ -22,5 +23,3 @@ alias fuk='sudo $(history -p !!)'
 # Alias to create a tmux session with the current folder name if it does not exist
 alias tn='tmux new-session -A -s $(basename "$PWD")'
 alias ta='tmux a'
-
-alias cdv='cd /projects/vbu_projects/users/rawadk'

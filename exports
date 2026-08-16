@@ -11,6 +11,8 @@ fi
 export EDITOR=/usr/bin/vim
 export ENVIRONMENT=development
 
+# export user secrets (not part of the repo for security reasons, save them in ~/.config/dotfiles/secrets.sh)
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/secrets.sh" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/secrets.sh"
 # fzf exports
 if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
   PATH=${HOME}/.fzf/bin:${PATH}
