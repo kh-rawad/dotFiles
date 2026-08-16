@@ -150,7 +150,9 @@
     "nullglob",
     "yazi",
     "Konsole",
-    "Fura"
+    "Fura",
+    "CTYPE",
+    "ocomm"
   ],
   "ignoreRegExpList": [
     "/^\\s*\\| .*$/",
