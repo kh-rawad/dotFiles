@@ -1,6 +1,12 @@
 : "${LOCALDIST_EXPORTS:=./exports}"
 : "${LOCALDIST_ALIASES:=./aliases}"
 
+# ── Version ───────────────────────────────────────────────────────────────────
+# Kubernetes server component version (kubectl / kubeadm).  Both binaries
+# share the same release tag on dl.k8s.io.  Update both the tag and the
+# architecture-specific paths below together.
+VERSION="1.35.0"
+
 # kubernetes tools completion
 echo "--- Installing kubectl and kubeadm"
 if [[ $OSTYPE == 'linux-gnu'* ]]; then
@@ -11,11 +17,11 @@ if [[ $OSTYPE == 'linux-gnu'* ]]; then
     # check for latest kubectl version
     # $(curl -L -s https://dl.k8s.io/release/stable.txt)
     if ! is_termux; then
-      curl -L -o "$K8S_STAGE_DIR/kubectl" "https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubectl"
-      curl -L -o "$K8S_STAGE_DIR/kubeadm" "https://dl.k8s.io/release/v1.35.0/bin/linux/amd64/kubeadm"
+      curl -L -o "$K8S_STAGE_DIR/kubectl" "https://dl.k8s.io/release/v${VERSION}/bin/linux/amd64/kubectl"
+      curl -L -o "$K8S_STAGE_DIR/kubeadm" "https://dl.k8s.io/release/v${VERSION}/bin/linux/amd64/kubeadm"
     else
-      curl -L -o "$K8S_STAGE_DIR/kubectl" "https://dl.k8s.io/release/v1.35.0/bin/linux/arm64/kubectl"
-      curl -L -o "$K8S_STAGE_DIR/kubeadm" "https://dl.k8s.io/release/v1.35.0/bin/linux/arm64/kubeadm"
+      curl -L -o "$K8S_STAGE_DIR/kubectl" "https://dl.k8s.io/release/v${VERSION}/bin/linux/arm64/kubectl"
+      curl -L -o "$K8S_STAGE_DIR/kubeadm" "https://dl.k8s.io/release/v${VERSION}/bin/linux/arm64/kubeadm"
     fi
 
     chmod +x "$K8S_STAGE_DIR/kubectl" "$K8S_STAGE_DIR/kubeadm"

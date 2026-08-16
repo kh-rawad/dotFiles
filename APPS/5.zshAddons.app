@@ -1,3 +1,8 @@
+# ── Version ───────────────────────────────────────────────────────────────────
+# No pinned version.  oh-my-zsh always installs master; zsh-autosuggestions
+# clones its default branch.  To pin, replace the URLs below with tagged
+# release tarballs.
+
 echo "--- Installing oh-my-zsh"
 rm -rf "$HOME/.oh-my-zsh"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended

@@ -1,10 +1,24 @@
 #!/bin/bash
 
-source "$(dirname "$0")/setEnv"
+# ── Resolve script location & enter its directory ──────────────────────────────
+# pushd is used (instead of plain cd) so we can reliably pop back to the
+# caller's original working directory when this script completes, no matter
+# where it was invoked from.
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)" \
+  || SCRIPT_DIR="$(dirname -- "${BASH_SOURCE[0]}")"
 
+# Export so that sourced files (setEnv, .app, .pref) can rely on it too.
+export DOTFILES_DIR="$SCRIPT_DIR"
+
+pushd -- "$SCRIPT_DIR" >/dev/null || exit 1
+
+# ── Bootstrap environment ──────────────────────────────────────────────────────
+source "$SCRIPT_DIR/setEnv"
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
 build_localdist() {
-  LOCALDIST_DIR="./localdist"
-  LOCALDIST_DOTFILES_DIR="${LOCALDIST_DIR}/.config/dotfiles"
+  local LOCALDIST_DIR="./localdist"
+  local LOCALDIST_DOTFILES_DIR="${LOCALDIST_DIR}/.config/dotfiles"
 
   rm -rf "$LOCALDIST_DIR"
   mkdir -p "$LOCALDIST_DOTFILES_DIR"
@@ -22,13 +36,15 @@ build_localdist() {
   export LOCALDIST_ZSHRC="${LOCALDIST_DIR}/.zshrc"
 }
 
+# ── Pre-flight ────────────────────────────────────────────────────────────────
 echo "Detected system: $SYSTEM_INFO"
 if [[ -z "${SYSTEM_INFO:-}" ]]; then
   echo "System information not detected. Please set SYSTEM_INFO in setEnv file."
+  popd >/dev/null || true
   exit 1
 fi
 
-# install dependencies
+# ── Dependencies (optional) ────────────────────────────────────────────────────
 if [[ -z "${PACKAGING_START:-}" ]]; then
   echo "Do you want to install dependencies? (Yes/No)"
   read -r install_deps
@@ -45,23 +61,25 @@ else
   if is_termux; then
     if ! pkg update -y && pkg install -y vim curl wget git zsh tmux nodejs-lts stow unzip; then
       echo "Failed to install dependencies"
+      popd >/dev/null || true
       exit 1
     fi
   elif [[ $OSTYPE == 'darwin'* ]]; then
-  if ! brew install vim curl wget git tmux stow; then
-    echo "Failed to install dependencies"
-    exit 1
-  fi
+    if ! brew install vim curl wget git tmux stow; then
+      echo "Failed to install dependencies"
+      popd >/dev/null || true
+      exit 1
+    fi
   elif grep -qiE "debian|ubuntu|mint" /etc/*release; then
     if ! sudo apt update -y && sudo apt install -y vim curl wget git zsh unzip stow bison libevent-dev; then
       echo "Failed to install dependencies"
+      popd >/dev/null || true
       exit 1
     fi
   fi
-
 fi
 
-
+# ── App installers ────────────────────────────────────────────────────────────
 echo "################################################################"
 echo "Installing applications"
 echo "################################################################"
@@ -78,6 +96,7 @@ for app in ./APPS/*; do
   echo -e "\n---------------------------------------------------------------\n"
 done
 
+# ── Preferences ───────────────────────────────────────────────────────────────
 echo "################################################################"
 echo "running preferences scripts"
 echo "################################################################"
@@ -91,16 +110,16 @@ for pref in ./PREFS/*; do
   fi
   echo -e "\n---------------------------------------------------------------"
 done
+
+# ── Install dotfiles ──────────────────────────────────────────────────────────
 echo "################################################################"
 echo "Installing dotfiles"
 echo "################################################################"
-# Create the dotfiles folder if it doesn't exist
 if [[ -d "$DOTFILES_FOLDER" ]]; then
   echo "DotFiles folder exists continue"
 else
   mkdir -p "$DOTFILES_FOLDER"
 fi
-# install dotfiles
 echo "Installing BashRC"
 cp -f localdist/.bashrc "$HOME/.bashrc"
 echo "Installing ZshRC"
@@ -109,3 +128,9 @@ echo "Installing Zsh environment"
 cp -f localdist/.zshenv "$HOME/.zshenv"
 echo "Installing Dotfiles config"
 cp -rf localdist/.config/dotfiles/. "$DOTFILES_FOLDER/"
+
+# ── Return to caller's original directory ─────────────────────────────────────
+popd >/dev/null || true
+echo "################################################################"
+echo "Done — back in $(pwd)"
+echo "################################################################"

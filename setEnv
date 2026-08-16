@@ -1,7 +1,10 @@
 #!/bin/bash
 # Source custom functions
+# DOTFILES_DIR is exported by install.sh (or set here as a fallback when
+# setEnv is sourced directly from an interactive shell).
+: "${DOTFILES_DIR:=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)}"
 
-source "$(dirname "$0")/functions"
+source "$DOTFILES_DIR/functions"
 
 export DOTFILES_FOLDER="${HOME}/.config/dotfiles"
 export DEFAULT_SHELL='zsh'

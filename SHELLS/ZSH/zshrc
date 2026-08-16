@@ -1,6 +1,43 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
+# ── Nerd Font Check ─────────────────────────────────────────────────────────
+# Detects whether the terminal is rendering with a Nerd Font.  Shell config
+# cannot force the terminal font, but this diagnostic runs at startup and
+# prints a clear fix if a non-Nerd-Font font is detected.
+if [[ -n "$ZSH_VERSION" ]]; then
+  _nerd_font_check() {
+    # fc-match with :charset traces the actual terminal-active font chain,
+    # bypassing system-generic aliases like "Noto Sans Mono".
+    local matched
+    matched=$(fc-match ':charset=0xE0A0' family 2>/dev/null | head -1)
+    if ! echo "$matched" | grep -qiE 'nerd font|NF\b'; then
+      cat <<'EOF'
+
+  ⚠  Your terminal font does NOT appear to be a Nerd Font.
+     Icons and Powerline symbols will show as boxes or question marks.
+
+     Fix it now — set your terminal font to one of:
+       • FiraCode Nerd Font
+       • FuraCode Nerd Font
+       • Hack Nerd Font
+       • JetBrainsMono Nerd Font
+
+     Per-terminal instructions:
+       VS Code   → settings.json → "terminal.integrated.fontFamily"
+       GNOME     → Preferences → Profiles → Text → Custom font
+       Konsole   → Settings → Edit Profile → Appearance
+       Termux   :~/.termux/termux.properties → "font"
+       iTerm2    → Preferences → Profiles → Text → Font
+
+EOF
+    fi
+  }
+  _nerd_font_check
+  unset -f _nerd_font_check
+fi
+# ── /Nerd Font Check ────────────────────────────────────────────────────────
+
 # Path to your Oh My Zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 

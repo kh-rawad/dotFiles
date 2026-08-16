@@ -1,4 +1,24 @@
 # Handy Extract Program
+check_nerd_font() {
+  # Print a warning if the terminal's font is not a Nerd Font.
+  # Nerd Font glyphs are needed for Oh-My-Zsh theme symbols, kubectx,
+  # k9s, git status icons, fzf --preview, and eza --icons.
+  # Returns 0 when a Nerd Font is detected, 1 otherwise.
+  # Query a Nerd-Font-only Private Use codepoint (U+E0A0, branch icon).
+  # fc-match with :charset= traces the *actual terminal-active font chain*,
+  # bypassing system-generic aliases like "Noto Sans Mono" that :family 'mono'
+  # would return.
+  local matched
+  matched=$(fc-match ':charset=0xE0A0' family 2>/dev/null | head -1)
+  if ! echo "$matched" | grep -qiE 'nerd font|NF\b'; then
+    echo "⚠  Terminal font ('$matched') is NOT a Nerd Font."
+    echo "   Icons will render as boxes. Set your terminal font to a Nerd Font variant (e.g. FiraCode Nerd Font)."
+    return 1
+  fi
+  return 0
+}
+
+# Handy Extract Program
 function extract() {
     # Usage: extract <file>
     if [ -z "$1" ] ; then
