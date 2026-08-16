@@ -33,11 +33,9 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     brew tap homebrew/cask-fonts
 
     for font in "${FONTS_LIST[@]}"; do
-        # Convert PascalCase → kebab-case and prepend the cask prefix.
-        # sed breakdown:
-        #   s/\([A-Z]\)/-\L\1/g   insert a dash before every capital and lowercase it
-        #   s/^-//                 strip the leading dash the first substitution adds
-        cask_name="font-$(echo "$font" | sed 's/\([A-Z]\)/-\L\1/g' | sed 's/^-//')"-nerd-font
+        # Convert PascalCase → kebab-case (portable: BSD/GNU sed).
+        kebab="$(echo "$font" | sed 's/[A-Z]/-&/g; s/^-//' | tr '[:upper:]' '[:lower:]')"
+        cask_name="font-${kebab}-nerd-font"
         brew install --cask "$cask_name"
     done
 

@@ -1,4 +1,4 @@
-echo '>>>Intalling eza'
+echo '>>>Installing eza'
 echo '--- https://github.com/eza-community/eza'
 
 # ── Version ───────────────────────────────────────────────────────────────────

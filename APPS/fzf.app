@@ -1,5 +1,5 @@
 ## install fzf
-
+echo "--- Installing fzf"
 # ── Version ───────────────────────────────────────────────────────────────────
 # No pinned version.  fzf is cloned from upstream master; install.sh inside
 # the clone always pulls the latest release binary.  To pin, replace the

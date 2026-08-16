@@ -59,7 +59,7 @@ if [[ ! $install_deps =~ ^([Yy][Ee][Ss]|[Yy])$ ]]; then
 else
   echo "Installing Dependencies"
   if is_termux; then
-    if ! pkg update -y && pkg install -y vim curl wget git zsh tmux nodejs-lts stow unzip; then
+    if ! (pkg update -y && pkg install -y vim curl wget git zsh tmux nodejs-lts stow unzip); then
       echo "Failed to install dependencies"
       popd >/dev/null || true
       exit 1
@@ -71,7 +71,7 @@ else
       exit 1
     fi
   elif grep -qiE "debian|ubuntu|mint" /etc/*release; then
-    if ! sudo apt update -y && sudo apt install -y vim curl wget git zsh unzip stow bison libevent-dev; then
+    if ! (sudo apt update -y && sudo apt install -y vim curl wget git zsh unzip stow bison libevent-dev); then
       echo "Failed to install dependencies"
       popd >/dev/null || true
       exit 1
