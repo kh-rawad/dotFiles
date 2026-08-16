@@ -1,5 +1,9 @@
 ## install copilot-cli
 
+# ── Version ───────────────────────────────────────────────────────────────────
+# No pinned version.  `npm install -g @github/copilot` always fetches the
+# latest published npm package; the Vim plugin clones master from GitHub.
+
 echo "--- Installing GitHub Copilot CLI"
 if [[ $OSTYPE == 'darwin'* ]]; then
     brew install --cask github-copilot

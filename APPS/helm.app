@@ -1,25 +1,12 @@
-set -e
+# ── Version ───────────────────────────────────────────────────────────────────
+# No pinned version.  The official get-helm-3 script always installs the
+# latest stable Helm release from get.helm.sh.  To pin, replace the URL
+# with a versioned script, e.g.:
+#   https://raw.githubusercontent.com/helm/helm/v3.14.0/scripts/get-helm-3
 
-HELM_SCRIPT="get_helm.sh"
-
-echo "Downloading Helm installer..."
-curl -fsSL --retry 3 --retry-delay 2 -o "$HELM_SCRIPT" https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 || {
-    echo "Error: Failed to download Helm installer. Check your internet connection or GitHub rate limits."
-    exit 1
-}
-
-if [ ! -f "$HELM_SCRIPT" ]; then
-    echo "Error: Helm installer script not found after download"
-    exit 1
-fi
-
-echo "Running Helm installer..."
-chmod 700 "$HELM_SCRIPT"
-HELM_INSTALL_DIR="$HOME/.local/bin" USE_SUDO=false ./get_helm.sh || {
-    echo "Error: Helm installation failed"
-    rm -f "$HELM_SCRIPT"
-    exit 1
-}
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+HELM_INSTALL_DIR="$HOME/.local/bin" ./get_helm.sh
 
 : "${LOCALDIST_EXPORTS:=./exports}"
 

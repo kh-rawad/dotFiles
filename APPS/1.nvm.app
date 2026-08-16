@@ -1,10 +1,14 @@
 ## installs nvm (Node Version Manager)
 echo "--- Installing NVM (Node Version Manager)"
 
+# ── Version ───────────────────────────────────────────────────────────────────
+# nvm install script release.  Update to pin to a newer nvm version.
+VERSION="0.40.0"
+
 : "${LOCALDIST_EXPORTS:=./exports}"
 
 if ! is_termux; then
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash   
+    curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${VERSION}/install.sh" | bash   
     
     # export for installer use
     export NVM_DIR="$HOME/.nvm"

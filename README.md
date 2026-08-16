@@ -101,6 +101,7 @@ dotFiles/
 │   ├── BASH/bashrc       # Bash RC (sourced into ~/.bashrc)
 │   └── ZSH/zshrc         # Zsh RC (sourced into ~/.zshrc)
 ├── APPS/                 # Per-app installers (sourced by install.sh)
+│   ├── README.md         # How to add, update, and order apps
 │   ├── 1.nvm.app
 │   ├── 2.tmux.app
 │   ├── 3.tmuxAddons.app
@@ -121,7 +122,31 @@ dotFiles/
 
 ---
 
-## Notes
+## Terminal Font Setup (Nerd Fonts)
+
+Oh My Zsh themes and plugins use Unicode / Powerline / Nerd Font symbols
+(e.g. branch icons, Kubernetes context, git status glyphs).  Fonts are
+configured in the **terminal emulator**, not in the shell.  Nerd Fonts
+must already be installed (this repo installs **FiraCode Nerd Font** via
+`APPS/nerdFonts.app`).
+
+After install, set the terminal font to one of the Nerd Font variants that
+was installed:
+
+| Terminal             | How to set the font                                                                                                                    |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| **VS Code**          | `settings.json` → `"terminal.integrated.fontFamily": "FiraCode Nerd Font"`                                                             |
+| **GNOME Terminal**   | Preferences → Profiles → *your profile* → Text → un-check *Use the system fixed-width font* → pick *FiraCode Nerd Font*                |
+| **Konsole**          | Settings → Edit Current Profile → Appearance → *FiraCode Nerd Font*                                                                    |
+| **iTerm2 (macOS)**   | Preferences → Profiles → Text → Font → *FiraCode Nerd Font*                                                                            |
+| **Alacritty**        | `font: { family: "FiraCode Nerd Font", size: 12.0 }` in `alacritty.yml`                                                               |
+| **Kitty**            | `font_family FiraCode Nerd Font` in `kitty.conf`                                                                                       |
+| **Termux**           | Amend `~/.termux/termux.properties` → `font: FiraCode Nerd Font` then run `termux-reload-settings`                                    |
+| **Windows Terminal** | In the profile JSON: `"font": { "face": "FiraCode Nerd Font" }`                                                                       |
+
+> **Tip:** if you see boxes (□) or replacement characters (�) instead of
+> icons in your prompt, that means the terminal is not using a Nerd Font.
+> Change the setting above and restart the terminal.
 
 - `.env` / `.env.local` files exist and are gitignored — keep secrets out of the repo.
 - App installers in `APPS/` are **sourced**, not executed — they share the parent shell's environment and can use the helper functions in `functions`.

@@ -1,7 +1,12 @@
 echo '>>>Intalling eza'
 echo '--- https://github.com/eza-community/eza'
+
+# ── Version ───────────────────────────────────────────────────────────────────
+# Pin the eza release so every platform downloads the same binary and the
+# bundled completions match.
+VERSION="0.23.4"
+
 PACKAGE_NAME='eza'
-PACKAGE_VERSION='0.23.4'
 
 : "${LOCALDIST_ZSHRC:=./SHELLS/ZSH/zshrc}"
 
@@ -39,11 +44,11 @@ elif is_termux; then
 elif [[ $OSTYPE == 'linux-gnu'* ]] && [[ "$(uname -m)" == 'x86_64' ]]; then
     tmp_dir="$(mktemp -d)"
 
-    wget -c "https://github.com/eza-community/eza/releases/download/v${PACKAGE_VERSION}/eza_x86_64-unknown-linux-gnu.tar.gz" -O - | tar xz -C "$tmp_dir"
+    wget -c "https://github.com/eza-community/eza/releases/download/v${VERSION}/eza_x86_64-unknown-linux-gnu.tar.gz" -O - | tar xz -C "$tmp_dir"
     install -Dm755 "$tmp_dir/eza" "${HOME}/.local/bin/eza"
 
     echo '--- Copy completions scripts (if bundled)'
-    wget -c "https://github.com/eza-community/eza/releases/download/v${PACKAGE_VERSION}/completions-${PACKAGE_VERSION}.tar.gz" -O - | tar xz -C "$tmp_dir"
+    wget -c "https://github.com/eza-community/eza/releases/download/v${VERSION}/completions-${VERSION}.tar.gz" -O - | tar xz -C "$tmp_dir"
 
     # target_paths[0] is BASH, target_paths[1] is ZSH
     target_paths=( "${DOTFILES_FOLDER}/SHELLS/"{BASH,ZSH}"/${PACKAGE_NAME}/completions" )

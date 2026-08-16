@@ -1,5 +1,11 @@
 ## install fzf
 
+# ── Version ───────────────────────────────────────────────────────────────────
+# No pinned version.  fzf is cloned from upstream master; install.sh inside
+# the clone always pulls the latest release binary.  To pin, replace the
+# git URL with a specific tag, e.g.:
+#   https://github.com/junegunn/fzf.git v0.60.3
+
 : "${LOCALDIST_EXPORTS:=./exports}"
 
 if [[ $OSTYPE == 'darwin'* ]]; then

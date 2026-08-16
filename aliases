@@ -1,9 +1,7 @@
-alias ls="ls --color" \
-	la="ls -A" \
-	ll="ls -l" \
-	lll="ls -la" \
-	#alias l='ls -CF'
-
+alias ls='eza -G --icons=always --group-directories-first'
+alias la='eza -a --icons=always --group-directories-first'
+alias ll='eza -l --icons=always --group-directories-first'
+alias lll='eza -la --icons=always --group-directories-first'
 
 alias vis="sudo vi"
 alias ping="ping -c3"
@@ -26,5 +24,3 @@ alias tn='tmux new-session -A -s $(basename "$PWD")'
 alias ta='tmux a'
 
 alias cdv='cd /projects/vbu_projects/users/rawadk'
-
-alias ls='eza -G --icons --group-directories-first'
