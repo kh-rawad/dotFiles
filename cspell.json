@@ -126,11 +126,35 @@
     "vnoremap",
     "vsmarketplacebadge",
     "wildmenu",
-    "winnr"
+    "winnr",
+    "suod",
+    "rawadk",
+    "kubeadm",
+    "distro",
+    "codepoint",
+    "Noto",
+    "xvjf",
+    "xvzf",
+    "bunzip",
+    "unrar",
+    "vimod",
+    "suall",
+    "readmd",
+    "pandoc",
+    "treee",
+    "subfolders",
+    "Pilafian",
+    "msys",
+    "DISTRO",
+    "mktemp",
+    "nullglob",
+    "yazi",
+    "Konsole",
+    "Fura"
   ],
   "ignoreRegExpList": [
-    "/^\\s*\\| .*$/", /* comment lines in README tables */
-    "/https?://[^\\s]+/" /* URLs */
+    "/^\\s*\\| .*$/",
+    "/https?://[^\\s]+/"
   ],
   "flagWords": []
 }

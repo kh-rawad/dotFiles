@@ -8,6 +8,10 @@ check_nerd_font() {
   # fc-match with :charset= traces the *actual terminal-active font chain*,
   # bypassing system-generic aliases like "Noto Sans Mono" that :family 'mono'
   # would return.
+  if ! command -v fc-match >/dev/null 2>&1; then
+    echo "⚠  Cannot check terminal font: fc-match not found (install fontconfig)."
+    return 1
+  fi
   local matched
   matched=$(fc-match ':charset=0xE0A0' family 2>/dev/null | head -1)
   if ! echo "$matched" | grep -qiE 'nerd font|NF\b'; then

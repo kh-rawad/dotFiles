@@ -7,7 +7,7 @@ echo "--- Installing VIM"
 # when the system or ~/.local/bin/vim already meets or exceeds this version.
 VERSION="9.2"
 
-if "$HOME/.local/bin/vim" -V 2>/dev/null | grep -q "VIM - Vi IMproved ${VERSION}"; then
+if [[ -x "$HOME/.local/bin/vim" ]] && "$HOME/.local/bin/vim" --version 2>/dev/null | head -n 1 | grep -q "VIM - Vi IMproved ${VERSION}"; then
     ## install vim-plug
     manual_install \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \

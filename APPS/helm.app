@@ -4,6 +4,7 @@
 # with a versioned script, e.g.:
 #   https://raw.githubusercontent.com/helm/helm/v3.14.0/scripts/get-helm-3
 
+echo "--- Installing Helm"
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 HELM_INSTALL_DIR="$HOME/.local/bin" ./get_helm.sh

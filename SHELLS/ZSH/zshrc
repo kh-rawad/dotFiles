@@ -9,8 +9,12 @@ if [[ -n "$ZSH_VERSION" ]]; then
   _nerd_font_check() {
     # fc-match with :charset traces the actual terminal-active font chain,
     # bypassing system-generic aliases like "Noto Sans Mono".
+    if ! command -v fc-match >/dev/null 2>&1; then
+      return 0
+    fi
     local matched
     matched=$(fc-match ':charset=0xE0A0' family 2>/dev/null | head -1)
+    [[ -n "$matched" ]] || return 0
     if ! echo "$matched" | grep -qiE 'nerd font|NF\b'; then
       cat <<'EOF'
 
