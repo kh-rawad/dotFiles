@@ -267,6 +267,69 @@ function run_install_script() {
     echo "$dest Installation completed successfully."
 }
 
+function install_from_source() {
+    # Usage: install_from_source <url> <binary_name> [destination_dir]
+    # Downloads a tar.gz, extracts it, runs ./configure && make, and copies binary to destination
+    # Default destination: $HOME/.local/bin
+    local url="$1"
+    local bin_name="$2"
+    local dest_dir="${3:-$HOME/.local/bin}"
+
+    if [[ -z "$url" || -z "$bin_name" ]]; then
+        echo "Usage: install_from_source <url> <binary_name> [destination_dir]"
+        return 1
+    fi
+
+    if [[ ! -d "$dest_dir" ]]; then
+        mkdir -p "$dest_dir" || { echo "Failed to create directory $dest_dir"; return 1; }
+    fi
+
+    echo "Installing $bin_name from source: $url"
+    local tmpdir
+    tmpdir=$(mktemp -d) || { echo "Failed to create temporary directory"; return 1; }
+    trap 'rm -rf "$tmpdir"' EXIT
+
+    cd "$tmpdir" || { echo "Failed to change to temporary directory"; return 1; }
+
+    echo "Downloading $url"
+    curl -L "$url" -o source.tar.gz || { echo "Download failed!"; return 1; }
+
+    echo "Extracting archive..."
+    tar xzf source.tar.gz || { echo "tar extraction failed!"; return 1; }
+
+    local extracted_dir
+    extracted_dir=$(ls -d */ | head -1 | sed 's:/$::') || { echo "No directory found in archive"; return 1; }
+
+    echo "Entering directory: $extracted_dir"
+    cd "$extracted_dir" || { echo "Failed to change to extracted directory"; return 1; }
+
+    echo "Running configure..."
+    if [[ -f "./configure" ]]; then
+        ./configure || { echo "configure failed!"; return 1; }
+    else
+        echo "Warning: configure script not found"
+    fi
+
+    echo "Running make..."
+    make || { echo "make failed!"; return 1; }
+
+    echo "Searching for binary: $bin_name"
+    local binary_path
+    binary_path=$(find . -name "$bin_name" -type f -executable 2>/dev/null | head -1)
+
+    if [[ -z "$binary_path" ]]; then
+        echo "Error: Could not find binary $bin_name after build"
+        return 1
+    fi
+
+    echo "Found binary at: $binary_path"
+    echo "Copying $bin_name to $dest_dir"
+    cp "$binary_path" "$dest_dir/$bin_name" || { echo "Failed to copy binary"; return 1; }
+    chmod +x "$dest_dir/$bin_name"
+
+    echo "Installation complete! $bin_name installed to $dest_dir/$bin_name"
+}
+
 function y() {
     local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
     command yazi "$@" --cwd-file="$tmp"
