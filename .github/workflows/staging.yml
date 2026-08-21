@@ -46,3 +46,21 @@ jobs:
           path: |
             megalinter-reports
             mega-linter.log
+
+      - name: Create Pull Request with applied fixes
+        id: create_pull_request_with_applied_fixes
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676
+        with:
+          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          base: main
+          branch: megalinter/apply-fixes
+          commit-message: "[MegaLinter] Apply linters automatic fixes"
+          title: "[MegaLinter] Apply linters automatic fixes"
+          delete-branch: false
+          labels: bot
+
+      - name: Create PR output
+        if: steps.ml.outputs.has_updated_sources == '1' && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'pull_request' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
+        run: |
+          echo "Pull Request Number - ${{ steps.create_pull_request_with_applied_fixes.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.create_pull_request_with_applied_fixes.outputs.pull-request-url }}"
