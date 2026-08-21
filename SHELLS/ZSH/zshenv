@@ -1,2 +1,2 @@
-# Let Oh My Zsh initialize completions after custom fpath entries are configured.
+# Let Oh My Zsh initialize completions after custom completion paths are configured.
 skip_global_compinit=1
