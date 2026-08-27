@@ -152,7 +152,8 @@
     "Konsole",
     "Fura",
     "CTYPE",
-    "ocomm"
+    "ocomm",
+    "oneline"
   ],
   "ignoreRegExpList": [
     "/^\\s*\\| .*$/",
