@@ -8,7 +8,7 @@ on:
 env:
   APPLY_FIXES: all
   APPLY_FIXES_EVENT: pull_request
-  APPLY_FIXES_MODE: commit
+  APPLY_FIXES_MODE: pull_request
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -21,8 +21,9 @@ permissions:
 
 jobs:
   megalinter:
-    name: CI / MegaLinter # <- required-check name to select
+    name: CI / MegaLinter
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -36,7 +37,7 @@ jobs:
         uses: oxsecurity/megalinter@e08c2b05e3dbc40af4c23f41172ef1e068a7d651
         env:
           VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
 
       - name: Archive production artifacts
         if: ${{ success() || failure() }}
@@ -58,9 +59,3 @@ jobs:
           title: "[MegaLinter] Apply linters automatic fixes"
           delete-branch: false
           labels: bot
-
-      - name: Create PR output
-        if: steps.ml.outputs.has_updated_sources == '1' && (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) && env.APPLY_FIXES_MODE == 'pull_request' && (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository)
-        run: |
-          echo "Pull Request Number - ${{ steps.create_pull_request_with_applied_fixes.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.create_pull_request_with_applied_fixes.outputs.pull-request-url }}"
