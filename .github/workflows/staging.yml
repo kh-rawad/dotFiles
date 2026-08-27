@@ -33,12 +33,18 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Show Git state
+        env:
+          REPOSITORY: ${{ github.repository }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_SOURCE_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
         run: |
-          echo "Repository: ${{ github.repository }}"
-          echo "Event: ${{ github.event_name }}"
-          echo "PR number: ${{ github.event.pull_request.number }}"
-          echo "PR source branch: ${{ github.event.pull_request.head.ref }}"
-          echo "PR target branch: ${{ github.event.pull_request.base.ref }}"
+          echo "Repository: ${REPOSITORY}"
+          echo "Event: ${EVENT_NAME}"
+          echo "PR number: ${PR_NUMBER}"
+          echo "PR source branch: ${PR_SOURCE_BRANCH}"
+          echo "PR target branch: ${PR_TARGET_BRANCH}"
           echo "Checked out branch:"
           git branch --show-current
           echo "HEAD:"
