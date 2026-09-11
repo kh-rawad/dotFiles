@@ -1,3 +1,4 @@
+#!/bin/bash
 echo '>>>Installing eza'
 echo '--- https://github.com/eza-community/eza'
 

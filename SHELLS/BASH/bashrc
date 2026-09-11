@@ -85,7 +85,7 @@ esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    if [ -r "$HOME/.dircolors" ]; then eval "$(dircolors -b "$HOME/.dircolors")"; else eval "$(dircolors -b)"; fi
     alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
@@ -111,17 +111,17 @@ fi
 
 
 # User specific aliases and functions
-if [ -f $DOTFILES_FOLDER/functions ]; then
-source $DOTFILES_FOLDER/functions
+if [ -f "$DOTFILES_FOLDER/functions" ]; then
+source "$DOTFILES_FOLDER/functions"
 fi
 
 # my functions
-if [ -f $DOTFILES_FOLDER/aliases ]; then
-source $DOTFILES_FOLDER/aliases
+if [ -f "$DOTFILES_FOLDER/aliases" ]; then
+source "$DOTFILES_FOLDER/aliases"
 fi
 
 # exports
-if [ -f $DOTFILES_FOLDER/exports ]; then
-source $DOTFILES_FOLDER/exports
+if [ -f "$DOTFILES_FOLDER/exports" ]; then
+source "$DOTFILES_FOLDER/exports"
 fi
 

@@ -3,7 +3,7 @@
 ## Build, test, and lint
 
 - Primary integration command: `./install.sh`
-  - This is the main entrypoint used by CI in `.github/workflows/blank.yml`.
+  - This is the main entrypoint used by CI in `.github/workflows/ci.yml`.
   - It is not a dry run: it copies files into `$HOME` and `~/.config/dotfiles`, may prompt for dependency installation, and installs plugins/fonts/tools.
 - Packaging command: `./package.sh`
   - This stages an install into a temporary `HOME`, sets `PACKAGING_START=true`, runs `./install.sh`, then creates `dotfiles_package_*.tar.gz`.

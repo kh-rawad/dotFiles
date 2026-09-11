@@ -1,3 +1,4 @@
+#!/bin/bash
 ## install yh (Yaml Highlighter)
 echo "--- Installing YH (Yaml Highlighter)"
 

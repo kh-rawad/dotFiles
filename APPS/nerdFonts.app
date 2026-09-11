@@ -1,4 +1,5 @@
 
+#!/bin/bash
 ## install Fonts
 echo "--- Installing Fonts"
 

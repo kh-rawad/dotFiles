@@ -1,3 +1,4 @@
+#!/bin/bash
 ## add k9s binary from GitHub
 echo "--- Installing K9S"
 

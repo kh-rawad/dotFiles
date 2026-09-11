@@ -1,3 +1,4 @@
+#!/bin/bash
 ## install fzf
 echo "--- Installing fzf"
 # ── Version ───────────────────────────────────────────────────────────────────

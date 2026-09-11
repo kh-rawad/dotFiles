@@ -1,3 +1,4 @@
+#!/bin/bash
 # ── Version ───────────────────────────────────────────────────────────────────
 # No pinned version.  oh-my-zsh always installs master; zsh-autosuggestions
 # clones its default branch.  To pin, replace the URLs below with tagged
