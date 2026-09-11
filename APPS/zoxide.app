@@ -6,7 +6,6 @@ echo "--- Installing zoxide"
 # No pinned version.  zoxide's official install script always fetches the
 # latest release.  To pin, replace the script URL with a specific version.
 
-#!/bin/bash
 : "${LOCALDIST_EXPORTS:=./exports}"
 
 if [[ $OSTYPE == 'darwin'* ]]; then

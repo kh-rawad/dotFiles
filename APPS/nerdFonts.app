@@ -1,4 +1,3 @@
-
 #!/bin/bash
 ## install Fonts
 echo "--- Installing Fonts"
@@ -54,7 +53,7 @@ elif is_termux; then
         install_font_zip "https://github.com/ryanoasis/nerd-fonts/releases/download/v${VERSION}/${font}.zip"
     done
 
-elif [ "$(grep -Ei 'debian|ubuntu|mint' /etc/*release)" ]; then
+elif grep -qE 'debian|ubuntu|mint' /etc/*release; then
     # Debian / Ubuntu / Mint (also covers WSL)
     # ─────────────────────────────────────────────────────────────────────────
     # The distro packages (fonts-hack-nerd, etc.) lag behind the upstream

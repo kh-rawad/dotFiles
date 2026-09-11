@@ -90,16 +90,15 @@ function treee(){
     # WTFPL ~ https://centerkey.com/tree ~ Dem Pilafian #
     #####################################################
 
-    test -n "$1" && cd "$1" || return;  #if parameter exists, use as base folder
-    pwd;
-    ls -R | grep "^[.]/" | sed -e "s/:$//" -e "s/[^\/]*\//--/g" -e "s/^/   |/";
-    # Transformations:
-    #     grep    --> select folders (filter out files)
-    #     1st sed --> remove trailing colon
-    #     2nd sed --> replace higher level folder names with dashes
-    #     3rd sed --> indent graph and add leading vertical bar
-    topFolders=$(ls -aF -1 | grep "/" | wc -l);
+    shopt -s nullglob
+    local dirs=(*/)
+    local topFolders=${#dirs[@]}
+    shopt -u nullglob
     test "$topFolders" -ne 0 || echo "   --> no subfolders";
+    for d in "${dirs[@]}"; do
+        echo "${d%/}:"
+        find "$d" -type f | sed "s|^|$d/|" | sed -e "s/[^\/]*\//--/g" -e "s/^/   |/"
+    done
 }
 
 append_block_once() {
@@ -161,7 +160,7 @@ function install_font_zip(){
     # Check if the URL is provided
     if [ -z "$1" ]; then
     echo "Please provide a URL to a font zip file."
-    exit 1
+    return 1
     fi
 
     # Create a temporary directory
@@ -323,7 +322,7 @@ function install_from_source() {
     tar xzf source.tar.gz || { echo "tar extraction failed!"; return 1; }
 
     local extracted_dir
-    extracted_dir=$(ls -d */ | head -1 | sed 's:/$::') || { echo "No directory found in archive"; return 1; }
+    extracted_dir=$(find . -maxdepth 1 -mindepth 1 -type d | head -1 | sed 's:^\./::;s:/$::') || { echo "No directory found in archive"; return 1; }
 
     echo "Entering directory: $extracted_dir"
     cd "$extracted_dir" || { echo "Failed to change to extracted directory"; return 1; }
