@@ -1,3 +1,4 @@
+#!/bin/bash
 # ── Version ───────────────────────────────────────────────────────────────────
 # No pinned version.  The official get-helm-3 script always installs the
 # latest stable Helm release from get.helm.sh.  To pin, replace the URL
@@ -20,5 +21,5 @@ fi
 EOF
 fi
 
-rm -f "$HELM_SCRIPT"
+rm -f "get_helm.sh"
 echo "--- Helm installed successfully"

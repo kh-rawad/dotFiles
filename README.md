@@ -113,7 +113,10 @@ dotFiles/
 │   ├── helm.app
 │   ├── k8s.app
 │   ├── k9s.app
-│   └── nerdFonts.app
+│   ├── nerdFonts.app
+│   ├── pv.app
+│   ├── yh.app
+│   └── zoxide.app
 ├── PREFS/                # Post-install preference scripts
 │   ├── git.pref
 │   └── shell.pref

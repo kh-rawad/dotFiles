@@ -1,3 +1,4 @@
+#!/bin/bash
 ## install tmux plugins manager
 echo "--- Installing Tmux Config"
 

@@ -1,3 +1,4 @@
+#!/bin/bash
 ## installs nvm (Node Version Manager)
 echo "--- Installing NVM (Node Version Manager)"
 

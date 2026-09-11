@@ -1,3 +1,4 @@
+#!/bin/bash
 ## install tmux from source
 echo "--- Installing tmux from source"
 
@@ -18,11 +19,11 @@ if [[ $OSTYPE == 'linux'* ]]; then
 
         wget "https://github.com/tmux/tmux/releases/download/${VERSION}/${TMUX_TAR}" || {
             echo "--- Failed to download tmux. Aborting."
-            exit 1
+            return 1
         }
 
         tar -zxf "$TMUX_TAR"
-        cd "$TMUX_DIR" || { echo "--- Failed to enter tmux directory"; exit 1; }
+        cd "$TMUX_DIR" || { echo "--- Failed to enter tmux directory"; return 1; }
 
         ./configure --prefix="$HOME/.local"
         make && make install

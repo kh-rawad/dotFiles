@@ -125,7 +125,7 @@ plugins=(
   jira
 )
 #   
-source $ZSH/oh-my-zsh.sh
+source "$ZSH"/oh-my-zsh.sh
 
 # User configuration
 
@@ -188,23 +188,23 @@ export ZSH_TMUX_AUTOQUIT="true"
 ## Automatically name new sessions based on the basename of $PWD
 export ZSH_TMUX_AUTONAME_SESSION="true"
 ## if running in iTerm2
-[[ $TERM_PROGRAM == "iTerm.app" ]] && export ZSH_TMUX_ITERM2="true" || export ZSH_TMUX_ITERM2="false"
+if [[ $TERM_PROGRAM == "iTerm.app" ]]; then export ZSH_TMUX_ITERM2="true"; else export ZSH_TMUX_ITERM2="false"; fi
 export TERM=xterm-256color
 
 DOTFILES_FOLDER=~/.config/dotfiles
 
 # User specific aliases and functions
-if [ -f $DOTFILES_FOLDER/functions ]; then
-source $DOTFILES_FOLDER/functions
+if [ -f "$DOTFILES_FOLDER/functions" ]; then
+source "$DOTFILES_FOLDER/functions"
 fi
 
 # my functions
-if [ -f $DOTFILES_FOLDER/aliases ]; then
-source $DOTFILES_FOLDER/aliases
+if [ -f "$DOTFILES_FOLDER/aliases" ]; then
+source "$DOTFILES_FOLDER/aliases"
 fi
 
 # exports
-if [ -f $DOTFILES_FOLDER/exports ]; then
-source $DOTFILES_FOLDER/exports
+if [ -f "$DOTFILES_FOLDER/exports" ]; then
+source "$DOTFILES_FOLDER/exports"
 fi
 

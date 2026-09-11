@@ -1,3 +1,4 @@
+#!/bin/bash
 : "${LOCALDIST_EXPORTS:=./exports}"
 : "${LOCALDIST_ALIASES:=./aliases}"
 
