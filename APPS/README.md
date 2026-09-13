@@ -26,7 +26,8 @@ APPS/
 ├── k8s.app            # kubectl, kubeadm, completions
 ├── k9s.app            # Kubernetes TUI
 ├── nerdFonts.app      # icon fonts (no other app depends on this)
-└── yh.app             # Yaml Highlighter (standalone binary)
+├── yh.app             # Yaml Highlighter (standalone binary)
+└── zoxide.app         # smarter directory navigation; also patches exports
 ```
 
 When adding a new app, pick the next available number, or insert between
