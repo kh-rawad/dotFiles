@@ -316,26 +316,26 @@ function install_from_source() {
     pushd "$tmpdir" > /dev/null || { echo "Failed to change to temporary directory"; return 1; }
 
     echo "Downloading $url"
-    curl -L "$url" -o source.tar.gz || { echo "Download failed!"; popd > /dev/null; return 1; }
+    curl -L "$url" -o source.tar.gz || { echo "Download failed!"; popd > /dev/null || return 1; return 1; }
 
     echo "Extracting archive..."
-    tar xzf source.tar.gz || { echo "tar extraction failed!"; popd > /dev/null; return 1; }
+    tar xzf source.tar.gz || { echo "tar extraction failed!"; popd > /dev/null || return 1; return 1; }
 
     local extracted_dir
-    extracted_dir=$(find . -maxdepth 1 -mindepth 1 -type d | head -1 | sed 's:^\./::;s:/$::') || { echo "No directory found in archive"; popd > /dev/null; return 1; }
+    extracted_dir=$(find . -maxdepth 1 -mindepth 1 -type d | head -1 | sed 's:^\./::;s:/$::') || { echo "No directory found in archive"; popd > /dev/null || return 1; return 1; }
 
     echo "Entering directory: $extracted_dir"
-    pushd "$extracted_dir" > /dev/null || { echo "Failed to change to extracted directory"; popd > /dev/null; return 1; }
+    pushd "$extracted_dir" > /dev/null || { echo "Failed to change to extracted directory"; popd > /dev/null || return 1; return 1; }
 
     echo "Running configure..."
     if [[ -f "./configure" ]]; then
-        ./configure || { echo "configure failed!"; popd > /dev/null; return 1; }
+        ./configure || { echo "configure failed!"; popd > /dev/null || return 1; return 1; }
     else
         echo "Warning: configure script not found"
     fi
 
     echo "Running make..."
-    make || { echo "make failed!"; popd > /dev/null; return 1; }
+    make || { echo "make failed!"; popd > /dev/null || return 1; return 1; }
 
     echo "Searching for binary: $bin_name"
     local binary_path
@@ -349,7 +349,7 @@ function install_from_source() {
 
     echo "Found binary at: $binary_path"
     echo "Copying $bin_name to $dest_dir"
-    cp "$binary_path" "$dest_dir/$bin_name" || { echo "Failed to copy binary"; popd > /dev/null; return 1; }
+    cp "$binary_path" "$dest_dir/$bin_name" || { echo "Failed to copy binary"; popd > /dev/null || return 1; return 1; }
     chmod +x "$dest_dir/$bin_name"
 
     popd > /dev/null || return 1
