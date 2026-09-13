@@ -153,7 +153,9 @@
     "Fura",
     "CTYPE",
     "ocomm",
-    "oneline"
+    "oneline",
+    "pushd",
+    "popd"
   ],
   "ignoreRegExpList": [
     "/^\\s*\\| .*$/",

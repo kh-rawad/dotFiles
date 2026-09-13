@@ -86,6 +86,7 @@ echo "################################################################"
 build_localdist
 
 for app in ./APPS/*; do
+  [[ "$app" == *.md ]] && continue
   echo ">>> Installing $app"
   # shellcheck disable=SC1090
   if source "$app"; then

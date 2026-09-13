@@ -9,14 +9,22 @@ echo "--- Installing zoxide"
 : "${LOCALDIST_EXPORTS:=./exports}"
 
 if [[ $OSTYPE == 'darwin'* ]]; then
-    brew install zoxide
+    brew install zoxide || return 1
 elif is_termux; then
-    pkg install -y zoxide
+    pkg install -y zoxide || return 1
 else
-    run_install_script \
+    installer="$(mktemp)" || return 1
+    curl --fail --location --silent --show-error \
         https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh \
-        "$HOME/.local/zoxide-install" \
-        sh
+        --output "$installer" || {
+        rm -f "$installer"
+        return 1
+    }
+    sh "$installer" || {
+        rm -f "$installer"
+        return 1
+    }
+    rm -f "$installer"
 fi
 
 ZOXIDE_BLOCK='#[DOTFILES_ZOXIDE]
